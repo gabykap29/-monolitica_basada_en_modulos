@@ -1,4 +1,4 @@
-import { Model, Schema, Document, model } from "mongoose";
+import {  Schema, Document, model } from "mongoose";
 
 enum Role {
     Admin = 'admin',

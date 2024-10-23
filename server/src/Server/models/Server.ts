@@ -1,6 +1,6 @@
 import express, {Application} from 'express';
 import cors from 'cors';
-import { db } from '../database/db';
+import { db } from '../../database/db';
 import routerTest from '../routes/routerTest';
 import { PORT } from '../config/config';
 

@@ -1,5 +1,5 @@
 import mongoose, {Connection} from "mongoose";
-import { mongoUri } from "../config/config"; 
+import { mongoUri } from "../Server/config/config"; 
 
 class dbManager{
     private static instance: dbManager | null = null;

@@ -1,6 +1,6 @@
 import UserRepository from "../repository/UserRepository";
 import { IUser } from "../models/Users";
-
+import bcrypt from 'bcrypt';
 class UserService {
   private userRepository: UserRepository = new UserRepository();
   constructor() {}
@@ -45,6 +45,9 @@ class UserService {
       if (!names || !lastname || !birthdate || !username || !pass || !mail) {
         throw new Error("Todos los campos requeridos deben estar presentes");
       }
+      const salt = await bcrypt.genSalt(10);
+      const passHash = bcrypt.hashSync(pass,salt);
+      pass = passHash;
       const newUser = await this.userRepository.create(
         names,
         lastname,

@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import requestIp from 'request-ip';
 import cors from 'cors';
 import { db } from '../../database/db';
 import routerTest from '../routes/routerTest';
@@ -23,6 +24,7 @@ class Server {
     private async middlewares(): Promise<void> {
         this.app.use(express.json());
         this.app.use(cors());
+        this.app.use(requestIp.mw());
     }
     private routes(): void {
         this.app.use(routerTest);

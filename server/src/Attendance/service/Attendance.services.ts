@@ -21,4 +21,15 @@ export class AttendanceService {
         }
     }
 
+    public async findAttendanceByUser(idUser: string) {
+        try {
+            const attendances = await this.AttendanceRepository.findAll(idUser);
+
+            return attendances
+
+        } catch (error) {
+
+        }
+    }
+
 }

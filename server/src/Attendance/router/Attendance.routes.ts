@@ -5,6 +5,8 @@ const attendanceController = new AttendanceController();
 
 const router = Router();
 
-router.post("/attendance", attendanceController.getUsers);
+router.get("/attendance/:id", attendanceController.getUsers);
+
+router.post("/attendance", attendanceController.createAttendance);
 
 export default router;

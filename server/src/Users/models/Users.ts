@@ -1,4 +1,4 @@
-import { Model, Schema, Document, model } from "mongoose";
+import {  Schema, Document, model } from "mongoose";
 
 enum Role {
     Admin = 'admin',
@@ -6,7 +6,7 @@ enum Role {
     Preceptor = 'preceptor',
 }
 
-interface IUser extends Document {
+export interface IUser extends Document {
     names: string;
     lastname: string,
     birthdate: Date;

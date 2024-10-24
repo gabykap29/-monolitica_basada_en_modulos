@@ -6,7 +6,7 @@ enum Role {
     Preceptor = 'preceptor',
 }
 
-interface IUser extends Document {
+export interface IUser extends Document {
     names: string;
     lastname: string,
     birthdate: Date;

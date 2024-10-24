@@ -3,18 +3,26 @@ import User from "../models/Users";
 class UserRepository {
   constructor() {}
   async getAll() {
-    const users = await User.find();
-    if (!users) {
-      return false;
+    try {
+      const users = await User.find();
+      if (!users) {
+        throw new Error("No hay usuarios cargados!");
+      }
+      return users; 
+    } catch (error) {
+      throw new Error("Error al obtener los usuarios de la base de datos");
     }
-    return users;
   }
   async getOne(id: string) {
-    const user = await User.findOne({ _id: id });
-    if (!user) {
-      return false;
+    try {
+        const user = await User.findOne({ _id: id });
+        if (!user) {
+          throw new Error("El usuario no existe!");
+        }
+        return user;
+    } catch (error) {
+      throw new Error("Error al obtener el usuario de la base de datos");
     }
-    return user;
   }
   async create(
     names: string,
@@ -27,21 +35,25 @@ class UserRepository {
     mail: string,
     role: string
   ) {
-    const newUser = await User.create({
-      names: names,
-      lastname: lastname,
-      birthdate: birthdate,
-      address: address,
-      phone: phone,
-      username: username,
-      pass: pass,
-      mail: mail,
-      role: role,
-    });
-    if (!newUser) {
-      return false;
-    }
-    return newUser;
+   try {
+      const newUser = await User.create({
+        names: names,
+        lastname: lastname,
+        birthdate: birthdate,
+        address: address,
+        phone: phone,
+        username: username,
+        pass: pass,
+        mail: mail,
+        role: role,
+      });
+      if (!newUser) {
+        throw new Error("Error al crear el usuario, verifique los campos!");
+      }
+      return newUser;
+   } catch (error) {
+      throw new Error("Error al crear el usuario!");
+   }
   }
 
   async updateOne(
@@ -56,32 +68,45 @@ class UserRepository {
     mail: string,
     role: string
   ) {
-    const user = await User.findOneAndUpdate(
-      { _id: id }, // Filtro por id
-      {
-        $set: {
-          names: names,
-          lastname: lastname,
-          birthdate: birthdate,
-          address: address,
-          phone: phone,
-          username: username,
-          pass: pass,
-          mail: mail,
-          role: role,
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: id }, // Filtro por id
+        {
+          $set: {
+            names: names,
+            lastname: lastname,
+            birthdate: birthdate,
+            address: address,
+            phone: phone,
+            username: username,
+            pass: pass,
+            mail: mail,
+            role: role,
+          },
         },
-      },
-      { new: true } // Esto devolverá el documento actualizado
-    );
-  
-    return user;
+        { new: true } // Esto devolverá el documento actualizado
+      );
+      if(!user){
+        throw new Error("Error al actualizar el usuario, verifique los campos!");
+      }
+      await user.save();
+      return user;
+    } catch (error) {
+      throw new Error("Error al actualizar el usuario!");
+    }
+    
   }
   async deleteOne(id: string){
-    const user = await User.findOneAndDelete({_id: id});
-    if(!user){
-        return false;
+    try {
+      const user = await User.findOneAndDelete({_id: id});
+      if(!user){
+        throw new Error("No se encontró el usuario!")
+      }
+      return user;
+    } catch (error) {
+      throw new Error("Error al eliminar el usuario en la base de datos!");
     }
-    return user;
+
   }
   
 }

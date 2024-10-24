@@ -30,7 +30,7 @@ class Server{
         this.app.use('/api/',userRouter)
     }
     public listen():void{
-        this.app.listen(this.port, async()=>{
+        this.app.listen(this.port, '0.0.0.0',async()=>{
             console.log("Servidor funcionando en el puerto: "+ this.port);
         })
     }

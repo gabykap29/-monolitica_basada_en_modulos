@@ -14,21 +14,66 @@ export class AttendanceService {
 
         } catch (error) {
             console.log(error);
-
             throw new Error(
                 error instanceof Error ? error.message : "Error al marcar la asistencia del estudiante"
             );
         }
     }
 
-    public async findAttendanceByUser(idUser: string) {
+    public async findAllByDate(date: string): Promise<IAttendance[] | boolean> {
         try {
-            const attendances = await this.AttendanceRepository.findAll(idUser);
+            const attendances = await this.AttendanceRepository.findAllByDate(date)
 
             return attendances
 
         } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error ? error.message : "Error al buscar las asistencia del estudiante en esa fecha"
+            );
+        }
+    }
 
+    public async findOneAttendance(id: string): Promise<IAttendance | boolean> {
+        try {
+            const attendances = await this.AttendanceRepository.findId(id)
+
+            return attendances
+
+        } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error ? error.message : "Error al buscar las asistencia del estudiante."
+            );
+        }
+    }
+
+    public async findAttendancesByUser(idUser: string) {
+        try {
+            const attendances = await this.AttendanceRepository.findAllByStudent
+                (idUser);
+
+            return attendances
+
+        } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error ? error.message : "Error al buscar las asistencia del estudiante"
+            );
+        }
+    }
+
+    public async deleteAttendance(idUser: string): Promise<boolean | undefined> {
+        try {
+            const attendances = await this.AttendanceRepository.delete(idUser)
+
+            return attendances
+
+        } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error ? error.message : "Error al eliminar asistencia del estudiante"
+            );
         }
     }
 

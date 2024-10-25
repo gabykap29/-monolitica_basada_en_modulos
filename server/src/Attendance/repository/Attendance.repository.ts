@@ -4,7 +4,7 @@ export class AttendanceRepository {
 
     constructor() { }
 
-    async findOne(IdAttendance: string): Promise<boolean> {
+    async findId(IdAttendance: string): Promise<IAttendance | boolean> {
         try {
             const attendance = await Attendance.findById(IdAttendance)
 
@@ -12,14 +12,14 @@ export class AttendanceRepository {
                 return false
             }
 
-            return true
+            return attendance
 
         } catch (error) {
             throw new Error("Error al buscar la asistencia del estudiante");
         }
     }
 
-    async findAll(idStudent: string): Promise<boolean> {
+    async findAllByStudent(idStudent: string): Promise<IAttendance[] | boolean> {
         try {
             const attendance = await Attendance.find({ idStudent: idStudent })
 
@@ -27,24 +27,33 @@ export class AttendanceRepository {
                 return false
             }
 
-            return true
+            return attendance
 
         } catch (error) {
             throw new Error("Error al buscar las asistencias del estudiante");
         }
     }
 
-    async findAllByDate(date: string): Promise<boolean> {
+    async findAllByDate(date: string): Promise<IAttendance[] | boolean> {
         try {
-            const attendance = await Attendance.find({ createdAt: date })
+            const attendance = await Attendance.find({
+                $expr: {
+                    $eq: [
+                        { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                        date
+                    ]
+                }
+            }).populate('idStudent', 'names lastname')
 
-            if (!attendance) {
-                return false
+            console.log(attendance);
+
+            if (!attendance || attendance.length === 0) {
+                return false;
             }
 
-            return true
-
+            return attendance;
         } catch (error) {
+            console.log(error);
             throw new Error("Error al buscar las asistencias del estudiante por fecha");
         }
     }

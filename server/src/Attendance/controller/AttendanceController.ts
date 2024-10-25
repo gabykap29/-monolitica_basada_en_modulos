@@ -9,15 +9,12 @@ export class AttendanceController {
 
     createAttendance = async (req: Request, res: Response): Promise<void> => {
         try {
-            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-            console.log("IP address:", ip);
-
-            const users = await this.AttendanceService.markAttendance(req.body);
+            const attendance = await this.AttendanceService.markAttendance(req.body);
 
             res.status(200).json({
                 status: 200,
-                users: users
+                attendance: attendance
             });
 
         } catch (error) {
@@ -29,34 +26,14 @@ export class AttendanceController {
         }
     }
 
-    getUsers = async (req: Request, res: Response): Promise<void> => {
+    getAttendanceByUser = async (req: Request, res: Response): Promise<void> => {
         try {
-            // const ip = req.ip;
-            // const ip = req.headers['x-forwarded-for']
-            // const ip = req.socket.remoteAddress
-            const ip = req.clientIp;
 
-            console.log("IP address:", ip);
-
-            const token = "a631f41522aa77";
-
-            async function fetchIpInfo() {
-                try {
-                    const resp = await fetch(`https://ipinfo.io/${ip}?token=${token}`);
-                    const json = await resp.json();
-                    console.log(json);
-                } catch (error) {
-                    console.error("Error fetching IP info:", error);
-                }
-            }
-
-            fetchIpInfo();
-
-            const users = await this.AttendanceService.findAttendanceByUser(req.params.id);
+            const attendance = await this.AttendanceService.findOneAttendance(req.params.attendance);
 
             res.status(200).json({
                 status: 200,
-                users: users
+                attendance: attendance
             });
 
         } catch (error) {
@@ -68,4 +45,60 @@ export class AttendanceController {
         }
     }
 
+    getAttendancesByDate = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendances = await this.AttendanceService.findAllByDate(req.params.date);
+
+            res.status(200).json({
+                status: 200,
+                attendances: attendances
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
+    getAllAttendancesByUser = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendances = await this.AttendanceService.findAttendancesByUser(req.params.id);
+
+            res.status(200).json({
+                status: 200,
+                attendances: attendances
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
+    deleteAttendance = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendance = await this.AttendanceService.deleteAttendance(req.params.id);
+
+            res.status(200).json({
+                status: 200,
+                attendance: attendance
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
 }

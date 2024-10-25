@@ -5,6 +5,7 @@ import { db } from '../../database/db';
 import routerTest from '../routes/routerTest';
 import { PORT } from '../config/config';
 import userRouter from '../../Users/routes/users.routes';
+import attendanceRouter from "../../Attendance/router/Attendance.routes"
 
 class Server {
     private app: Application;
@@ -25,14 +26,16 @@ class Server {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(requestIp.mw());
+        this.app.set('trust proxy', true);
     }
     private routes(): void {
         this.app.use(routerTest);
-        this.app.use('/api/',userRouter)
+        this.app.use('/api/', userRouter)
+        this.app.use('/api/', attendanceRouter)
     }
-    public listen():void{
-        this.app.listen(this.port, '0.0.0.0',async()=>{
-            console.log("Servidor funcionando en el puerto: "+ this.port);
+    public listen(): void {
+        this.app.listen(this.port, '0.0.0.0', async () => {
+            console.log("Servidor funcionando en el puerto: " + this.port);
         })
     }
 

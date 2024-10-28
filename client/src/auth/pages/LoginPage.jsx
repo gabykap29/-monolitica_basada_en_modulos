@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { useForm } from '../../common/hooks/useForm';
 import { fetchAuth } from '../services/AuthService';
+import { handleLoginFailure, handleLoginSuccess } from '../handlers/HandlersLogin';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext)
@@ -10,20 +11,24 @@ const LoginPage = () => {
 
   // Usamos el hook useForm con valores iniciales
   const { form, handleInputChange, reset } = useForm({
-    email: "",
-    password: ""
+    username: "",
+    pass: ""
   });
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-
+      const data = await fetchAuth("login", "POST", form)
+      // Validamos si el login fue exitoso
+      if (data.token) {
+        handleLoginSuccess(data, reset, navigate, login);
+      } else {
+        handleLoginFailure(data.message || "Error interno");
+      }
     } catch (error) {
-      
+      handleLoginFailure("Error de conexión. Por favor, intenta nuevamente.");
+      console.error("Error en el login:", error);
     }
-    navigate("/IPF/home/")
-    
   };
 
   return (
@@ -32,12 +37,15 @@ const LoginPage = () => {
         <h2 className="text-center mb-4">Inicio de Sesión</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Correo electrónico</label>
+            <label htmlFor="username" className="form-label">Username</label>
             <input
-              type="email"
+              type="text"
               className="form-control"
-              id="email"
+              name='username'
+              id="username"
               placeholder="Ingresa tu correo"
+              value={form.username} 
+              onChange={handleInputChange} 
               required
             />
           </div>
@@ -46,8 +54,11 @@ const LoginPage = () => {
             <input
               type="password"
               className="form-control"
+              name='pass'
               id="password"
               placeholder="Ingresa tu contraseña"
+              value={form.password} 
+              onChange={handleInputChange} 
               required
             />
           </div>

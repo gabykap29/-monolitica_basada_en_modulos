@@ -1,9 +1,9 @@
 import React from 'react'
 import {BrowserRouter, Route, Routes} from "react-router-dom"
-import PrivateRoute from './PrivateRoutes'
-import { LinksRoutes } from './LinksRoutes'
-import LoginPage from '../pages/LoginPage'
+// import PrivateRoute from './PrivateRoutes'
+// import { LinksRoutes } from './LinksRoutes'
 import PublicRoute from './PublicRoutes'
+import LoginPage from '../auth/pages/LoginPage';
 
 const AppRoutes = () => {
   return (
@@ -19,7 +19,7 @@ const AppRoutes = () => {
         }
         />
 
-        {/* Rutas Privadas */}
+        {/* Rutas Privadas
         <Route 
           path='/IPF/*'
           element={
@@ -27,7 +27,7 @@ const AppRoutes = () => {
               <LinksRoutes />
             </PrivateRoute>
           }
-        />
+        /> */}
 
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,5 @@
 import { createContext, useReducer, useState } from "react";
-import { authReducer } from "../reducers/AuthReducer";
-import { typeAuth } from "../types/type";
+import { authReducer } from '../reducer/AuthReducer';
 
 // Se crea el contexto
 export const AuthContext = createContext(null)
@@ -8,12 +7,15 @@ export const AuthContext = createContext(null)
 // Proveedor
 export const AuthProvider = ({children}) => {
     const token = localStorage.getItem("token") || null
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const [auth, dispatchAuth] = useReducer(authReducer, {
-        token: token,
-        isAuthenticated: token ? true: false
+      token: token,
+      isAuthenticated: token ? true: false
     })
+
+    console.log("Auth: ", auth)
 
     // Función para manejar el login
   const login = (data) => {
@@ -31,7 +33,9 @@ export const AuthProvider = ({children}) => {
       });
     } catch (error) {
       setError("Error al iniciar sesión. Inténtalo de nuevo.");
-    } 
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Función para manejar el logout

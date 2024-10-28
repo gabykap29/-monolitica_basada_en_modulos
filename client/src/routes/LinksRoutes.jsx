@@ -1,10 +1,12 @@
 import { Route, Routes } from "react-router-dom"
-import MainPage from "../pages/MainPage"
+import HomePage from "../pages/Home/HomePage"
+import { StudentPage} from "../pages/Users/StudentPage"
 
 export const LinksRoutes = () => {
     return(
         <Routes>
-            <Route path="/dashboard/" element={<MainPage />}/>
+            <Route path="/home/" element={<HomePage />}/>
+            <Route path="/student/" element={<StudentPage />}/>
         </Routes>
     )
 }

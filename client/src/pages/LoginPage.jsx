@@ -5,9 +5,8 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí iría la lógica de autenticación
     console.log('Formulario enviado');
-    navigate("/IPF/dashboard/")
+    navigate("/IPF/home/")
     
   };
 

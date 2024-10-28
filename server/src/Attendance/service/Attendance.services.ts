@@ -13,7 +13,7 @@ export class AttendanceService {
             return attendance;
 
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error(
                 error instanceof Error ? error.message : "Error al marcar la asistencia del estudiante"
             );

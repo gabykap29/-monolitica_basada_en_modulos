@@ -23,10 +23,11 @@ export class AttendanceRepository {
         try {
             const attendance = await Attendance.find({ idStudent: idStudent })
 
+            console.log(attendance);
+
             if (!attendance) {
                 return false
             }
-
             return attendance
 
         } catch (error) {
@@ -66,7 +67,8 @@ export class AttendanceRepository {
 
         } catch (error) {
             console.log(error);
-            throw new Error("Error al crear una asistencia");
+            throw new Error(
+                error instanceof Error ? error.message.includes("duplicate key") ? "La asistencia ya esta marcada para el dia de hoy" : "Error al crear una asistencia" : "Error al crear una asistencia");
         }
     }
 
@@ -84,5 +86,4 @@ export class AttendanceRepository {
             throw new Error("Error al eliminar una asistencia");
         }
     }
-
 }

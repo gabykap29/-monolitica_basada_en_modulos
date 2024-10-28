@@ -5,6 +5,7 @@ import routerTest from '../routes/routerTest';
 import { PORT } from '../config/config';
 import userRouter from '../../Users/routes/users.routes';
 import authRouter from '../../Auth/routes/auth.routes';
+import { userInitial } from '../helpers/userInitial';
 
 class Server {
   private app: Application;
@@ -32,6 +33,7 @@ class Server {
   }
   public listen(): void {
     this.app.listen(this.port, '0.0.0.0', async () => {
+      await userInitial();
       console.log('Servidor funcionando en el puerto: ' + this.port);
     });
   }

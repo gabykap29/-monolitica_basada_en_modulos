@@ -1,7 +1,7 @@
-import UserRepository from "../repository/UserRepository";
-import { IUser } from "../models/Users";
-import bcrypt from "bcrypt";
-import { CustomError } from "../../Server/helpers/customError";
+import UserRepository from '../repository/UserRepository';
+import { IUser } from '../models/Users';
+import bcrypt from 'bcrypt';
+import { CustomError } from '../../Server/helpers/customError';
 
 class UserService {
   private userRepository: UserRepository = new UserRepository();
@@ -12,14 +12,14 @@ class UserService {
     try {
       const users = await this.userRepository.getAll();
       if (!users || users.length === 0) {
-        return new CustomError(404, "No se encontraron usuarios");
+        return new CustomError(404, 'No se encontraron usuarios');
       }
       return users;
     } catch (error) {
-      console.error("Error en getAllUser:", error);
+      console.error('Error en getAllUser:', error);
       return new CustomError(
         500,
-        "Error interno del servidor al obtener usuarios"
+        'Error interno del servidor al obtener usuarios',
       );
     }
   }
@@ -28,16 +28,16 @@ class UserService {
     try {
       const user = await this.userRepository.getOne(id);
       if (!user) {
-        return new CustomError(404, "El usuario no existe!");
+        return new CustomError(404, 'El usuario no existe!');
       }
       return user;
     } catch (error) {
-      console.error("Error en getOne:", error);
+      console.error('Error en getOne:', error);
       return new CustomError(
         error instanceof CustomError ? error.statusCode : 500,
         error instanceof CustomError
           ? error.message
-          : "Error al obtener el usuario"
+          : 'Error al obtener el usuario',
       );
     }
   }
@@ -47,17 +47,29 @@ class UserService {
     lastname,
     birthdate,
     address,
+    dni,
     phone,
     username,
     pass,
     mail,
     role,
-  }: IUser) {
+  }: Partial<IUser>) {
     try {
-      if (!names || !lastname || !birthdate || !username || !pass || !mail) {
+      if (
+        !names ||
+        !address ||
+        !lastname ||
+        !birthdate ||
+        !dni ||
+        !username ||
+        !pass ||
+        !mail ||
+        !phone ||
+        !role
+      ) {
         return new CustomError(
           400,
-          "Todos los campos requeridos deben estar presentes"
+          'Todos los campos requeridos deben estar presentes',
         );
       }
       const salt = await bcrypt.genSalt(10);
@@ -68,20 +80,21 @@ class UserService {
         lastname,
         birthdate,
         address,
+        dni,
         phone,
         username,
         pass,
         mail,
-        role
+        role,
       );
       return newUser;
     } catch (error) {
-      console.error("Error en create:", error);
+      console.error('Error en create:', error);
       return new CustomError(
         error instanceof CustomError ? error.statusCode : 500,
         error instanceof CustomError
           ? error.message
-          : "Error interno del servidor al crear un usuario!"
+          : 'Error interno del servidor al crear un usuario!',
       );
     }
   }
@@ -90,16 +103,16 @@ class UserService {
     try {
       const user = this.userRepository.getOneByUsername(username);
       if (!user) {
-        return new CustomError(404, "No se encontró el usuario!");
+        return new CustomError(404, 'No se encontró el usuario!');
       }
       return user;
     } catch (error) {
-      console.error("Error al obtener el usuario:", error);
+      console.error('Error al obtener el usuario:', error);
       return new CustomError(
         error instanceof CustomError ? error.statusCode : 500,
         error instanceof CustomError
           ? error.message
-          : "Error interno del servidor al obtener el usuario!"
+          : 'Error interno del servidor al obtener el usuario!',
       );
     }
   }
@@ -112,6 +125,7 @@ class UserService {
         birthdate,
         username,
         address,
+        dni,
         phone,
         pass,
         mail,
@@ -120,7 +134,7 @@ class UserService {
       if (!names || !lastname || !birthdate || !username || !pass || !mail) {
         return new CustomError(
           400,
-          "Todos los campos requeridos deben estar presentes"
+          'Todos los campos requeridos deben estar presentes',
         );
       }
 
@@ -130,20 +144,21 @@ class UserService {
         lastname,
         birthdate,
         address,
+        dni,
         phone,
         username,
         pass,
         mail,
-        role
+        role,
       );
       return update;
     } catch (error) {
-      console.error("Error en update:", error);
+      console.error('Error en update:', error);
       return new CustomError(
         error instanceof CustomError ? error.statusCode : 500,
         error instanceof CustomError
           ? error.message
-          : "Error interno del servidor al actualizar el usuario!"
+          : 'Error interno del servidor al actualizar el usuario!',
       );
     }
   }
@@ -152,16 +167,16 @@ class UserService {
     try {
       const userDelete = await this.userRepository.deleteOne(id);
       if (!userDelete) {
-        return new CustomError(404, "Usuario no encontrado para eliminar");
+        return new CustomError(404, 'Usuario no encontrado para eliminar');
       }
       return userDelete;
     } catch (error) {
-      console.error("Error en delete:", error);
+      console.error('Error en delete:', error);
       return new CustomError(
         error instanceof CustomError ? error.statusCode : 500,
         error instanceof CustomError
           ? error.message
-          : "Error interno del servidor al eliminar el usuario!"
+          : 'Error interno del servidor al eliminar el usuario!',
       );
     }
   }

@@ -1,6 +1,9 @@
 import React from 'react'
 import {BrowserRouter, Route, Routes} from "react-router-dom"
-import MainPage from '../pages/MainPage'
+import PrivateRoute from './PrivateRoutes'
+import { LinksRoutes } from './LinksRoutes'
+import LoginPage from '../pages/LoginPage'
+import PublicRoute from './PublicRoutes'
 
 const AppRoutes = () => {
   return (
@@ -10,14 +13,22 @@ const AppRoutes = () => {
         <Route 
         path='/'
         element={
-            <MainPage />
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
         }
         />
 
         {/* Rutas Privadas */}
-        <Route>
+        <Route 
+          path='/IPF/*'
+          element={
+            <PrivateRoute>
+              <LinksRoutes />
+            </PrivateRoute>
+          }
+        />
 
-        </Route>
       </Routes>
     </BrowserRouter>
   )

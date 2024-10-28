@@ -9,7 +9,7 @@ class UserRepository {
       if (!users) {
         return false;
       }
-      return users; 
+      return users;
     } catch (error) {
       console.error("Error en getAll:", error); // Agrega el log de error
       return false;
@@ -25,6 +25,19 @@ class UserRepository {
       return user;
     } catch (error) {
       console.error("Error en getOne:", error); // Agrega el log de error
+      return false;
+    }
+  }
+
+  async getOneByUsername(username: string) {
+    try {
+      const user = await User.findOne({ username: username });
+      if (!user) {
+        return false;
+      }
+      return user;
+    } catch (error) {
+      console.error(error);
       return false;
     }
   }

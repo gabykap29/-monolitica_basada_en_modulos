@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from './../context/AuthContext';
+import { useForm } from '../../common/hooks/useForm';
+import { fetchAuth } from '../services/AuthService';
 
 const LoginPage = () => {
+  const { login } = useContext(AuthContext)
   const navigate = useNavigate()
+
+  // Usamos el hook useForm con valores iniciales
+  const { form, handleInputChange, reset } = useForm({
+    email: "",
+    password: ""
+  });
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Formulario enviado');
+    try {
+
+    } catch (error) {
+      
+    }
     navigate("/IPF/home/")
     
   };

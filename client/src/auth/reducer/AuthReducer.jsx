@@ -1,4 +1,4 @@
-import { typeAuth } from "../types/type";
+import { typeAuth } from "../../common/types/type";
 
 export const authReducer = (state, action) => {
     switch (action.type) {

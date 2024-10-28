@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import Header from "../../components/utils/Header";
-import Sidebar from "../../components/utils/Sidebar";
-import { CardData } from "../../content/CardData";
+import Header from "../../common/components/Header";
+import Sidebar from "../../common/components/Sidebar";
+import { CardData } from "../content/CardData";
 
 const HomePage = () => {
 

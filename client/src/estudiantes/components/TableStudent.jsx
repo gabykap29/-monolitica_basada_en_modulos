@@ -4,6 +4,7 @@ import { fetchStudent } from "../services/StudentService";
 import { typeAction } from "../../common/types/type";
 import { StudentContext } from "../context/StudentContext";
 import InformationStudent from "./InformationStudent";
+import { Link } from "react-router-dom";
 
 const TableStudent = () => {
   const { dispatchStudents, students } = useContext(StudentContext);
@@ -56,9 +57,9 @@ const TableStudent = () => {
                   className="btn btn-link text-primary p-0">
                     <FaEye />
                   </button>
-                  <button className="btn btn-link text-warning p-0">
-                    <FaEdit />
-                  </button>
+                  <Link to={`/IPF/students/edit/${student._id}`} className="btn btn-link text-warning p-0">
+                      <FaEdit />
+                  </Link>
                   <button className="btn btn-link text-danger p-0">
                     <FaTrash />
                   </button>

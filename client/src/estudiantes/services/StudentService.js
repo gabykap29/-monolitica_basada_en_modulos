@@ -9,6 +9,7 @@ export const fetchStudent = async(route, method, payload) => {
     if(method === "GET"){
         try {
             const response = await fetch(url, {
+              method: method,
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${authHeader}`,

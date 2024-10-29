@@ -1,7 +1,8 @@
 import React from 'react'
-import Sidebar from '../../components/utils/Sidebar'
-import Header from '../../components/utils/Header'
-import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
+import Sidebar from '../../common/components/Sidebar';
+import Header from '../../common/components/Header';
+import UtilsStudent from '../components/UtilsStudent';
+import TableStudent from '../components/TableStudent';
 
 export const StudentPage = () => {
   return (
@@ -18,44 +19,9 @@ export const StudentPage = () => {
             <Header />
             <div className="container mt-4 p-4">
               {/* Buscador */}
-                
+                <UtilsStudent />
               {/* Table */}
-                <table className="table table-hover bg-white rounded-2">
-                  <thead className="table-dark">
-                    <tr>
-                      <th scope="col">Nombres</th>
-                      <th scope="col">Apellido</th>
-                      <th scope="col">Teléfono</th>
-                      <th scope="col">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                        <td>Eze</td>
-                        <td>eze</td>
-                        <td>eze</td>
-                        <td>
-                          <div className="d-flex gap-2">
-                            <button
-                              // onClick={() => handleViewDetails(user)}
-                              className="btn btn-link text-primary p-0"
-                            >
-                              <FaEye />
-                            </button>
-                            <button
-                              // onClick={() => handleViewEdit(user)}
-                              className="btn btn-link text-warning p-0"
-                            >
-                              <FaEdit />
-                            </button>
-                            <button className="btn btn-link text-danger p-0">
-                              <FaTrash />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                  </tbody>
-                </table>
+                <TableStudent />
             </div>
           </main>
         </div>

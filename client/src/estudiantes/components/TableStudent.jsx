@@ -6,7 +6,7 @@ import { StudentContext } from "../context/StudentContext";
 
 const TableStudent = () => {
   const { dispatchStudents, students } = useContext(StudentContext);
-  console.log(students)
+
   // Obtiene estudiantes desde la API (solo una vez al montar el componente)
   useEffect(() => {
     const fetchUsers = async () => {
@@ -14,7 +14,7 @@ const TableStudent = () => {
       dispatchStudents({ type: typeAction.SET_DATA, payload: data.users });
     };
     fetchUsers();
-  }, []);
+  }, [dispatchStudents]);
 
   return (
     <table className="table table-hover bg-white rounded-2 shadow-lg">
@@ -27,7 +27,7 @@ const TableStudent = () => {
         </tr>
       </thead>
       <tbody>
-        {students ? (
+        {students && students.length > 0 ? (
           students.map((student) => (
             <tr key={student.dni}>
               <td>{student.names}</td>
@@ -50,7 +50,9 @@ const TableStudent = () => {
           ))
         ) : (
           <tr>
-            <td colSpan="4">Loading...</td>
+            <td colSpan="4" className="text-center">
+              {students ? "No hay estudiantes disponibles" : "Cargando..."}
+            </td>
           </tr>
         )}
       </tbody>

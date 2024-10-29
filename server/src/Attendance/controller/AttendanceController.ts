@@ -48,7 +48,7 @@ export class AttendanceController {
     getAttendancesByDate = async (req: Request, res: Response): Promise<void> => {
         try {
 
-            const attendances = await this.AttendanceService.findAllByDate(req.params.date);
+            const attendances = await this.AttendanceService.findAllByDate(req.body);
 
             res.status(200).json({
                 status: 200,

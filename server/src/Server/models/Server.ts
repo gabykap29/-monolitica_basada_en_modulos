@@ -24,7 +24,9 @@ class Server {
     }
     private async middlewares(): Promise<void> {
         this.app.use(express.json());
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: 'http://localhost:5173'
+        }));
         this.app.use(requestIp.mw());
         this.app.set('trust proxy', true);
     }

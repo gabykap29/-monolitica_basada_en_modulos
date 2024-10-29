@@ -20,8 +20,10 @@ export class AttendanceService {
         }
     }
 
-    public async findAllByDate(date: string): Promise<IAttendance[] | boolean> {
+    public async findAllByDate({ date }: { date: string }): Promise<IAttendance[] | boolean> {
         try {
+            console.log(date);
+            
             const attendances = await this.AttendanceRepository.findAllByDate(date)
 
             return attendances

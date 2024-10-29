@@ -1,89 +1,148 @@
-
-import Sidebar from './components/Sidebar';
-import Header from "./components/Header";
+import React, { useEffect, useState } from 'react'
+import { Calendar, dayjsLocalizer } from "react-big-calendar"
+import "react-big-calendar/lib/css/react-big-calendar.css"
+import dayjs from "dayjs"
+import "dayjs/locale/es"
+import { FaCheck } from "react-icons/fa6";
+import { MdOutlineCancel } from "react-icons/md";
 
 const App = () => {
+  dayjs.locale("es")
+  const localizer = dayjsLocalizer(dayjs)
+  const [events, setEvents] = useState([])
+  const [attendance, setAttendance] = useState(null)
+  const [date, setDate] = useState(null)
 
-  // Colores para las tarjetas
-  const cardColors = {
-    deteccion: "#74b9ff", // Azul eléctrico para Detección Facial
-    registro: "#ff7675",  // Púrpura intenso para Registro de Personas
-    monitoreo: "#00d4ff", // Cian brillante para Monitoreo de Actividades
-    administracion: "#fdcb6e" // Rojo eléctrico para Administración de Usuarios
-  };
+  useEffect(() => {
+    (async () => {
+      const response = await fetch("http://localhost:4000/api/attendances/671a503ba204c5019ac50b54")
+      const data = await response.json()
+
+      const formattedData = data?.attendances?.map((attendance) => ({
+        start: dayjs(attendance.createdAt).toDate(),
+        end: dayjs(attendance.createdAt).toDate(),
+        title: attendance.isPresent ? "Presente" : "Ausente"
+      }))
+
+      if (formattedData) {
+        addAbsentEvents(formattedData)
+      }
+    })()
+  }, [])
+
+  const addAbsentEvents = (existingEvents) => {
+    const startOfMonth = dayjs().startOf("month")
+    const endOfMonth = dayjs().endOf("month")
+    let currentDate = startOfMonth
+    const allEvents = [...existingEvents]
+
+    while (currentDate.isBefore(endOfMonth)) {
+      const isWeekend = currentDate.day() === 0 || currentDate.day() === 6
+      const dateExists = existingEvents.some(event =>
+        dayjs(event.start).isSame(currentDate, 'day')
+      )
+
+      if (!isWeekend && !dateExists) {
+        allEvents.push({
+          start: currentDate.toDate(),
+          end: currentDate.toDate(),
+          title: "Ausente"
+        })
+      }
+      currentDate = currentDate.add(1, "day")
+    }
+
+    setEvents(allEvents)
+  }
+
+  const components = {
+    event: ({ event }) => (
+      <div style={{ backgroundColor: (event.title === "Presente" ? "green" : "red") }}>
+        {event.title === "Presente" ? <FaCheck /> : <MdOutlineCancel />}
+        {event.title}
+      </div>
+    )
+  }
+
+  const payload = {
+    idStudent: "671a503ba204c5019ac50b54",
+    isPresent: true
+  }
+
+  const dayPropGetter = (date) => {
+    const isToday = dayjs().isSame(date, 'day')
+    return isToday ? { style: { backgroundColor: 'blue' } } : {}
+  }
+
+  const markAttendance = async (e) => {
+    e.preventDefault()
+
+    setAttendance(payload)
+
+    const response = await fetch("http://localhost:4000/api/attendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...attendance, date }), // Asegúrate de incluir la fecha
+    })
+
+    const data = await response.json()
+
+    alert(JSON.stringify(data))
+    window.location.reload()
+  }
+
+  const handleSelectSlot = ({ start }) => {
+    setDate(start) // Guarda la fecha de inicio seleccionada en el estado
+    console.log("Fecha seleccionada:", start); // Imprime la fecha seleccionada
+  }
+
+  const findByDate = async (e) => {
+    e.preventDefault()
+
+    // Asegúrate de formatear `date` antes de enviarlo
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+    const response = await fetch("http://localhost:4000/api/attendances", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ date: formattedDate }), // Envía el formato correcto
+    })
+
+    const data = await response.json()
+
+    console.log(data);
+  }
 
   return (
-    <>
-      <div className="container-fluid" style={{ height: "100vh" }}>
-        <div className="row" style={{ height: "100%" }}>
-          {/* Sidebar */}
-          <div className="col-md-3 col-lg-2 px-0" style={{ height: "100vh" }}>
-            <Sidebar />
-          </div>
+    <div>
+      <Calendar
+        localizer={localizer}
+        style={{
+          height: 500,
+          width: 1000
+        }}
+        views={["month", "agenda"]}
+        defaultView='month'
+        events={events}
+        components={components}
+        dayPropGetter={dayPropGetter}
+        onSelectSlot={handleSelectSlot}
+        selectable // Permite la selección de días
+      />
+      <form onSubmit={markAttendance}>
+        <button type='submit'>Marcar asistencia</button>
+      </form>
 
-          {/* Main content */}
-          <main className="col-md-9 col-lg-10 px-0 bg-white" style={{ overflowY: "auto", height: "100%" }}>
-            <Header />
-            <div className="container mt-4">
-              <div className="row g-4">
-                {/* Detección Facial Card */}
-                <div className="col-md-6">
-                  <div className="card shadow-lg border-0" style={{ backgroundColor: cardColors.deteccion, borderRadius: '15px' }}>
-                    <div className="card-body text-white">
-                      <h5 className="card-title">Detección Facial</h5>
-                      <p className="card-text">Sistema avanzado de detección de rostros.</p>
-                      <a to="/pages/facial-detection">
-                        <button className="btn btn-light">Ver más</button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
+      <form onSubmit={findByDate}>
+        <input type="text" value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
+        <button type='submit'>Buscar por fecha</button>
+      </form>
+    </div>
+  )
+}
 
-                {/* Registro de Personas Card */}
-                <div className="col-md-6">
-                  <div className="card shadow-lg border-0" style={{ backgroundColor: cardColors.registro, borderRadius: '15px' }}>
-                    <div className="card-body text-white">
-                      <h5 className="card-title">Registro de Personas</h5>
-                      <p className="card-text">Registro de personas con identificación facial.</p>
-                      <a to="/pages/persons-registry">
-                        <button className="btn btn-light">Ver más</button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Monitoreo de Actividades Card */}
-                <div className="col-md-6">
-                  <div className="card shadow-lg border-0" style={{ backgroundColor: cardColors.monitoreo, borderRadius: '15px' }}>
-                    <div className="card-body text-white">
-                      <h5 className="card-title">Buscar personas</h5>
-                      <p className="card-text">Sistema avanzado de búsqueda con análisis facial.</p>
-                      <a to="/pages/activity-monitoring">
-                        <button className="btn btn-light">Ver más</button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Administración de Usuarios Card */}
-                <div className="col-md-6">
-                  <div className="card shadow-lg border-0" style={{ backgroundColor: cardColors.administracion, borderRadius: '15px' }}>
-                    <div className="card-body text-white">
-                      <h5 className="card-title">Administración de Usuarios</h5>
-                      <p className="card-text">Gestión y administración de usuarios del sistema.</p>
-                      <a to="/pages/user-management">
-                        <button className="btn btn-light">Ver más</button>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default App;
+export default App

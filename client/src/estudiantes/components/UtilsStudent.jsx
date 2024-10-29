@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const UtilsStudent = () => {
   return (
-    <div className="d-flex align-items-center justify-content-between mb-4 p-3 bg-white shadow-lg border-0">
+    <div className="d-flex align-items-center justify-content-between mb-4 p-3 bg-white shadow-lg border-0 rounded-2">
       <div className="d-flex align-items-center">
         <h4 className="me-3">Estudiantes</h4>
         <input
@@ -12,7 +13,7 @@ const UtilsStudent = () => {
           style={{ maxWidth: '250px' }}
         />
       </div>
-      <button className="btn btn-primary">Agregar</button>
+      <Link to={"/IPF/students/create/"} className="btn btn-primary">Agregar</Link>
     </div>
   );
 };

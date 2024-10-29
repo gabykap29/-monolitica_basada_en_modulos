@@ -1,11 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { fetchStudent } from "../services/StudentService";
 import { typeAction } from "../../common/types/type";
 import { StudentContext } from "../context/StudentContext";
+import InformationStudent from "./InformationStudent";
 
 const TableStudent = () => {
   const { dispatchStudents, students } = useContext(StudentContext);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   // Obtiene estudiantes desde la API (solo una vez al montar el componente)
   useEffect(() => {
@@ -16,7 +19,20 @@ const TableStudent = () => {
     fetchUsers();
   }, [dispatchStudents]);
 
+  // Mostrar Modal
+  const handleViewDetails = (user) => {
+    setSelectedUser(user);
+    setModalOpen(true);
+  };
+
+  // Cerrar Modal
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedUser(null);
+  };
+
   return (
+    <>
     <table className="table table-hover bg-white rounded-2 shadow-lg">
       <thead className="table-dark">
         <tr>
@@ -29,13 +45,15 @@ const TableStudent = () => {
       <tbody>
         {students && students.length > 0 ? (
           students.map((student) => (
-            <tr key={student.dni}>
+            <tr key={student._id}>
               <td>{student.names}</td>
               <td>{student.lastname}</td>
               <td>{student.dni}</td>
               <td>
                 <div className="d-flex gap-2">
-                  <button className="btn btn-link text-primary p-0">
+                  <button 
+                  onClick={() => handleViewDetails(student)}
+                  className="btn btn-link text-primary p-0">
                     <FaEye />
                   </button>
                   <button className="btn btn-link text-warning p-0">
@@ -57,6 +75,8 @@ const TableStudent = () => {
         )}
       </tbody>
     </table>
+    <InformationStudent isModalOpen={isModalOpen} closeModal={closeModal} selectedUser={selectedUser}/>
+    </>
   );
 };
 

@@ -23,7 +23,7 @@ export const fetchStudent = async(route, method, payload) => {
     } else {
         try {
             const response = await fetch(url, {
-                method: "POST",
+                method: method,
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${authHeader}`,
@@ -34,12 +34,12 @@ export const fetchStudent = async(route, method, payload) => {
             if (!response.ok) {
                 // Si el servidor devuelve un error, lanza una excepción con el mensaje del servidor
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Error en la solicitud POST");
+                throw new Error(errorData.message || "Error en la solicitud");
             }
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error("Error en la solicitud POST:", error);
+            console.error("Error en la solicitud:", error);
             throw error;
         }
     }

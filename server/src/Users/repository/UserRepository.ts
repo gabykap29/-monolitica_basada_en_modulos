@@ -3,9 +3,11 @@ import User from '../models/Users';
 class UserRepository {
   constructor() {}
 
-  async getAll() {
+  async getAll(typeUser: string) {
     try {
-      const users = await User.find();
+      const users = await User.find({
+        role: typeUser,
+      });
       if (!users) {
         return false;
       }

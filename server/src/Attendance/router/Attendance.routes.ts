@@ -10,11 +10,10 @@ router.get("/attendance/:attendance", attendanceController.getAttendanceByUser);
 
 router.get("/attendances/:id", attendanceController.getAllAttendancesByUser);
 
-
 router.post("/attendance", attendanceController.createAttendance);
 
 router.post("/attendances/", AllowRequest.isAllowed, AllowRequest.whereRequest, attendanceController.getAttendancesByDate);
 
-router.delete("/attendance", attendanceController.createAttendance);
+router.delete("/attendance/:id", attendanceController.deleteAttendance);
 
 export default router;

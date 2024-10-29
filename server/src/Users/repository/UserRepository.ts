@@ -1,4 +1,4 @@
-import User from "../models/Users";
+import User from '../models/Users';
 
 class UserRepository {
   constructor() {}
@@ -9,9 +9,9 @@ class UserRepository {
       if (!users) {
         return false;
       }
-      return users; 
+      return users;
     } catch (error) {
-      console.error("Error en getAll:", error); // Agrega el log de error
+      console.error('Error en getAll:', error); // Agrega el log de error
       return false;
     }
   }
@@ -24,7 +24,20 @@ class UserRepository {
       }
       return user;
     } catch (error) {
-      console.error("Error en getOne:", error); // Agrega el log de error
+      console.error('Error en getOne:', error); // Agrega el log de error
+      return false;
+    }
+  }
+
+  async getOneByUsername(username: string) {
+    try {
+      const user = await User.findOne({ username: username });
+      if (!user) {
+        return false;
+      }
+      return user;
+    } catch (error) {
+      console.error(error);
       return false;
     }
   }
@@ -34,11 +47,12 @@ class UserRepository {
     lastname: string,
     birthdate: Date,
     address: string,
+    dni: number,
     phone: number,
     username: string,
     pass: string,
     mail: string,
-    role: string
+    role: string,
   ) {
     try {
       const newUser = await User.create({
@@ -46,6 +60,7 @@ class UserRepository {
         lastname: lastname,
         birthdate: birthdate,
         address: address,
+        dni: dni,
         phone: phone,
         username: username,
         pass: pass,
@@ -57,7 +72,7 @@ class UserRepository {
       }
       return newUser;
     } catch (error) {
-      console.error("Error en create:", error); // Agrega el log de error
+      console.error('Error en create:', error); // Agrega el log de error
       return false;
     }
   }
@@ -68,11 +83,12 @@ class UserRepository {
     lastname: string,
     birthdate: Date,
     address: string,
+    dni: number,
     phone: number,
     username: string,
     pass: string,
     mail: string,
-    role: string
+    role: string,
   ) {
     try {
       const user = await User.findOneAndUpdate(
@@ -83,6 +99,7 @@ class UserRepository {
             lastname: lastname,
             birthdate: birthdate,
             address: address,
+            dni: dni,
             phone: phone,
             username: username,
             pass: pass,
@@ -90,7 +107,7 @@ class UserRepository {
             role: role,
           },
         },
-        { new: true } // Esto devolverá el documento actualizado
+        { new: true }, // Esto devolverá el documento actualizado
       );
       if (!user) {
         return false;
@@ -98,7 +115,7 @@ class UserRepository {
       await user.save();
       return user;
     } catch (error) {
-      console.error("Error en updateOne:", error); // Agrega el log de error
+      console.error('Error en updateOne:', error); // Agrega el log de error
       return false;
     }
   }
@@ -111,7 +128,7 @@ class UserRepository {
       }
       return user;
     } catch (error) {
-      console.error("Error en deleteOne:", error); // Agrega el log de error
+      console.error('Error en deleteOne:', error); // Agrega el log de error
       return false;
     }
   }

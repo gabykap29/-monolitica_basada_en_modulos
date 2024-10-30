@@ -16,6 +16,6 @@ export const CardData = [
         background: cardColors.registro,
         cardTitle: "Asistencias",
         cardText: "Sistema para la gestión de los alumnos.",
-        to: "/IPF/asistencias"
+        to: "/IPF/preceptor/asistencias"
     },
 ]

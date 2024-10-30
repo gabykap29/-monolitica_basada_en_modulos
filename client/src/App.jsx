@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Calendar, dayjsLocalizer } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import dayjs from "dayjs"
@@ -12,48 +12,30 @@ const App = () => {
   const [events, setEvents] = useState([])
   const [attendance, setAttendance] = useState(null)
   const [date, setDate] = useState(null)
+  const [view, setView] = useState('month');
+  const previousCount = useRef(events);
 
   useEffect(() => {
     (async () => {
-      const response = await fetch("http://localhost:4000/api/attendances/671a503ba204c5019ac50b54")
+      const response = await fetch("http://localhost:4000/api/attendances/671fa1df22b4b21baf289d93")
       const data = await response.json()
 
       const formattedData = data?.attendances?.map((attendance) => ({
+        id: attendance._id,
         start: dayjs(attendance.createdAt).toDate(),
         end: dayjs(attendance.createdAt).toDate(),
-        title: attendance.isPresent ? "Presente" : "Ausente"
+        title: attendance.isPresent ? "Presente" : "Ausente",
+        idStudent: attendance.idStudent,
       }))
 
-      if (formattedData) {
-        addAbsentEvents(formattedData)
-      }
+
+      setEvents(formattedData)
     })()
   }, [])
 
-  const addAbsentEvents = (existingEvents) => {
-    const startOfMonth = dayjs().startOf("month")
-    const endOfMonth = dayjs().endOf("month")
-    let currentDate = startOfMonth
-    const allEvents = [...existingEvents]
-
-    while (currentDate.isBefore(endOfMonth)) {
-      const isWeekend = currentDate.day() === 0 || currentDate.day() === 6
-      const dateExists = existingEvents.some(event =>
-        dayjs(event.start).isSame(currentDate, 'day')
-      )
-
-      if (!isWeekend && !dateExists) {
-        allEvents.push({
-          start: currentDate.toDate(),
-          end: currentDate.toDate(),
-          title: "Ausente"
-        })
-      }
-      currentDate = currentDate.add(1, "day")
-    }
-
-    setEvents(allEvents)
-  }
+  useEffect(() => {
+    console.log("Eventos actuales:", events);
+  }, [events]);
 
   const components = {
     event: ({ event }) => (
@@ -65,7 +47,7 @@ const App = () => {
   }
 
   const payload = {
-    idStudent: "671a503ba204c5019ac50b54",
+    idStudent: "671fa1df22b4b21baf289d93",
     isPresent: true
   }
 
@@ -84,7 +66,7 @@ const App = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...attendance, date }), // Asegúrate de incluir la fecha
+      body: JSON.stringify(payload), // Asegúrate de incluir la fecha
     })
 
     const data = await response.json()
@@ -99,9 +81,8 @@ const App = () => {
   }
 
   const findByDate = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    // Asegúrate de formatear `date` antes de enviarlo
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
     const response = await fetch("http://localhost:4000/api/attendances", {
@@ -109,12 +90,22 @@ const App = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ date: formattedDate }), // Envía el formato correcto
-    })
+      body: JSON.stringify({ date: formattedDate }),
+    });
 
-    const data = await response.json()
+    const data = await response.json();
 
-    console.log(data);
+    if (data.status === 200) {
+      const attendances = data.attendances.map(attendance => ({
+        start: dayjs(attendance.createdAt).toDate(), // Fecha de inicio
+        end: dayjs(attendance.createdAt).toDate(), // Fecha de fin (un día después)
+        title: attendance.isPresent ? "Presente" : "Ausente"
+      }));
+
+      setEvents(attendances); // Actualiza el estado de los eventos
+      setView('agenda'); // Cambia a la vista de agenda
+      console.log("Eventos actualizados:", attendances); // Verifica los eventos
+    }
   }
 
   return (
@@ -132,7 +123,10 @@ const App = () => {
         dayPropGetter={dayPropGetter}
         onSelectSlot={handleSelectSlot}
         selectable // Permite la selección de días
+        view={view} // Usar el estado de la vista
+        onView={setView}
       />
+
       <form onSubmit={markAttendance}>
         <button type='submit'>Marcar asistencia</button>
       </form>

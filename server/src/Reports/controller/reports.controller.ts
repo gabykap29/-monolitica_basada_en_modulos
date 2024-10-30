@@ -25,6 +25,32 @@ class ReportsController {
       res.status(500).json({ message: 'Error al generar el reporte', error: error instanceof Error ? error.message : error });
     }
   };
+
+  public getAllReports: RequestHandler = async (_req: Request, res: Response) => {
+    try {
+      const reports = await this.reportsService.getAllReports();
+      res.status(200).json(reports);
+    } catch (error) {
+      console.error('Error al obtener los reportes:', error);
+      res.status(500).json({ message: 'Error al obtener los reportes', error: error instanceof Error ? error.message : error });
+    }
+  };
+
+  public getReportById: RequestHandler = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const report = await this.reportsService.getReportById(id);
+  
+      if (!report) {
+        res.status(404).json({ message: 'Reporte no encontrado' });
+      }
+  
+      res.status(200).json(report);
+    } catch (error) {
+      console.error('Error al obtener el reporte:', error);
+      res.status(500).json({ message: 'Error al obtener el reporte', error: error instanceof Error ? error.message : error });
+    }
+  };
 }
 
 export default new ReportsController();

@@ -1,5 +1,5 @@
 import Report, { IReport, TypeReport } from './../model/reports.model';
-import User, { Role } from '../../Users/models/Users'; // Importa el modelo User
+import User, { Role } from '../../Users/models/Users';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
@@ -32,6 +32,14 @@ export class ReportsService {
     this.createReportPDF(`${student.names} ${student.lastname}`, typeReport, details);
 
     return newReport.toObject(); // Devolver el reporte como objeto
+  }
+
+  public async getAllReports(): Promise<IReport[]> {
+    return Report.find().populate('student', 'names lastname');
+  }
+
+  public async getReportById(reportId: string): Promise<IReport | null> {
+    return Report.findById(reportId).populate('student', 'names lastname');
   }
 
   private createReportPDF(studentName: string, typeReport: TypeReport, details: string) {

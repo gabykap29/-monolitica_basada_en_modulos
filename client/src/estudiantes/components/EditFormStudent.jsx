@@ -1,12 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
-import { FaUser, FaCalendarAlt, FaIdCard, FaMapMarkerAlt, FaPhone, FaUserCircle, FaLock, FaEnvelope } from "react-icons/fa";
+import { FaUser, FaCalendarAlt, FaIdCard, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { StudentContext } from "../context/StudentContext";
 import { fetchStudent } from "../services/StudentService";
-import { handleRegisterFailure, handleRegistroSuccess } from "../handlers/HandlersStudent";
+import { handleEditSuccess, handleFailure  } from "../handlers/HandlersStudent";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const EditFormStudent = () => {
-  const { createStudent } = useContext(StudentContext);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -68,9 +67,9 @@ const EditFormStudent = () => {
     try {
       const updatedStudent = await fetchStudent(`/users/${id}`, "PUT", form);
       if (updatedStudent) {
-        handleRegistroSuccess(updatedStudent, null, navigate, createStudent);
+        handleEditSuccess("Editado correctamente", navigate);
       } else {
-        handleRegisterFailure(updatedStudent.message || "Error Interno");
+        handleFailure(updatedStudent.message || "Error Interno");
       }
     } catch (error) {
       handleRegisterFailure("Error de conexión. Por favor, intenta nuevamente.");

@@ -6,7 +6,7 @@ const Sidebar = () => {
   useEffect(() => {
     // Obtener la ruta actual
     const path = window.location.pathname;
-    setCurrentPath(path || '/pages/home');
+    setCurrentPath(path || '/dashboard/');
   }, []); // Se ejecuta solo una vez al montar el componente
 
   // Estilos y efectos hover
@@ -47,7 +47,7 @@ const Sidebar = () => {
     >
       {/* Logo */}
       <a
-        href="/IPF/home/"
+        href="/dashboard/"
         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
       >
         <svg

@@ -3,8 +3,6 @@ import { env } from "../../common/config/config";
 export const fetchAuth = async (route, method, payload) => {
     const URL = `${env.SERVER_PATH}${route}`;
 
-    console.log("base: ", payload)
-
     const options = {
         method,
         headers: {

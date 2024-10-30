@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom"
 const PublicRoute = ({children}) => {
     const {auth} = useContext(AuthContext)
 
-    return !auth.isAuthenticated ? children : <Navigate to="/IPF/home/" />
+    return !auth.isAuthenticated ? children : <Navigate to="/dashboard/" />
 }
 
 export default PublicRoute

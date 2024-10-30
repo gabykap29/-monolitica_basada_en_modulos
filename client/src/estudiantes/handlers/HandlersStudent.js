@@ -1,14 +1,16 @@
 import Swal from 'sweetalert2';
 import iziToast from "izitoast"
+import 'izitoast/dist/css/iziToast.min.css';
+
 // Función auxiliar para manejar un registro exitoso
 export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
     createStudent(data);
   
     // Notifica al usuario
-    Swal.fire({
-      icon: "success",
-      title: "Excelente",
-      text: data.message,
+    iziToast.success({
+      title: "Éxito",
+      message: data.message,
+      position: "topRight",
     });
   
     // Reinicia formulario y redirige

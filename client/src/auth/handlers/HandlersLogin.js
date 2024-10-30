@@ -7,6 +7,7 @@ export const handleLoginSuccess = (data, reset, navigate, login) => {
   
     // Guarda datos en localStorage
     localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.dataUser.role);
   
     // Notifica al usuario
     Swal.fire({
@@ -17,7 +18,7 @@ export const handleLoginSuccess = (data, reset, navigate, login) => {
   
     // Reinicia formulario y redirige
     reset();
-    navigate("/IPF/home/");
+    navigate("/dashboard/");
   };
   
   // Función auxiliar para manejar un error de inicio de sesión

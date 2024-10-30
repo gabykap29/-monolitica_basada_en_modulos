@@ -67,7 +67,7 @@ const Sidebar = () => {
       <ul className="nav flex-column mb-auto">
         <li className="nav-item">
           <a
-            href="/pages/home"
+            href="/dashboard/"
             className="nav-link text-white"
             style={{
               ...linkStyle,

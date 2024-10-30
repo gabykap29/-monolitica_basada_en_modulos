@@ -1,5 +1,5 @@
 import React from 'react'
-import {BrowserRouter, Route, Routes} from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import PublicRoute from './PublicRoutes'
 import LoginPage from '../auth/pages/LoginPage';
 import { PreceptorRoutes } from '../preceptor/routes/PreceptorRoutes';
@@ -11,17 +11,17 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         {/* Ruta Principal */}
-        <Route 
-        path='/'
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
+        <Route
+          path='/'
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
         />
 
         {/* Rutas Privadas */}
-        <Route 
+        <Route
           path='/IPF/*'
           element={
             <PrivateRoute>

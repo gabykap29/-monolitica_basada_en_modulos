@@ -42,6 +42,10 @@ export class ReportsService {
     return Report.findById(reportId).populate('student', 'names lastname');
   }
 
+  public async deleteReport(reportId: string): Promise<IReport | null> {
+    return Report.findByIdAndDelete(reportId).populate('student', 'names lastname');
+  }
+
   private createReportPDF(studentName: string, typeReport: TypeReport, details: string) {
     const doc = new PDFDocument();
     const filePath = path.join(__dirname, `../../reports/Docs/${studentName}_report.pdf`);

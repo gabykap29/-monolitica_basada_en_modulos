@@ -26,6 +26,23 @@ class ReportsController {
     }
   };
 
+  public deleteReport: RequestHandler = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const deletedReport = await this.reportsService.deleteReport(id);
+
+      if (!deletedReport) {
+        res.status(404).json({ message: 'Reporte no encontrado' });
+      }
+
+      res.status(200).json({ message: 'Reporte eliminado correctamente', deletedReport });
+    } catch (error) {
+      console.error('Error al eliminar el reporte:', error);
+      res.status(500).json({ message: 'Error al eliminar el reporte', error: error instanceof Error ? error.message : error });
+    }
+  };
+
   public getAllReports: RequestHandler = async (_req: Request, res: Response) => {
     try {
       const reports = await this.reportsService.getAllReports();

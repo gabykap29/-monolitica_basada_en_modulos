@@ -1,7 +1,7 @@
 import { Schema, Document, model, Model, Types } from 'mongoose';
 
 export enum TypeReport {
-  FreeinMatter = 'Notificado de estado "libre"',
+  FreeinMatter = 'Notificado de estado libre',
   FaultNotice = 'Notificado de faltas',
 }
 
@@ -15,7 +15,7 @@ export interface IReport extends Document {
 const ReportSchema = new Schema<IReport>({
   student: {
     type: Schema.Types.ObjectId,
-    ref: 'Student',
+    ref: 'User',
     required: true,
   },
   typeReport: {

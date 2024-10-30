@@ -6,7 +6,7 @@ const userService = new UserService();
 
 export const userInitial = async () => {
   try {
-    const users = await userService.getAllUser();
+    const users = await userService.getAllUser('admin');
     if (users instanceof CustomError) {
       const admin = {
         names: 'initial',

@@ -8,9 +8,9 @@ class UserService {
 
   constructor() {}
 
-  async getAllUser() {
+  async getAllUser(typeUser: string) {
     try {
-      const users = await this.userRepository.getAll();
+      const users = await this.userRepository.getAll(typeUser);
       if (!users || users.length === 0) {
         return new CustomError(404, 'No se encontraron usuarios');
       }

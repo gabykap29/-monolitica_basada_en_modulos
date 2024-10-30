@@ -3,7 +3,7 @@ import { FaUser, FaCalendarAlt, FaIdCard, FaMapMarkerAlt, FaPhone, FaUserCircle,
 import { StudentContext } from "../context/StudentContext";
 import { fetchStudent } from "../services/StudentService";
 import { useForm } from '../../common/hooks/useForm';
-import { handleRegisterFailure, handleRegistroSuccess } from "../handlers/HandlersStudent";
+import { handleFailure, handleRegistroSuccess } from "../handlers/HandlersStudent";
 import { Link, useNavigate } from "react-router-dom";
 
 const CreateStudentForm = () => {
@@ -30,7 +30,7 @@ const CreateStudentForm = () => {
       if (newStudent) {
         handleRegistroSuccess(newStudent, reset, navigate, createStudent);
       } else {
-        handleRegisterFailure(newStudent.message || "Error Interno" )
+        handleFailure(newStudent.message || "Error Interno" )
       }
     } catch (error) {
       handleRegisterFailure("Error de conexión. Por favor, intenta nuevamente.");

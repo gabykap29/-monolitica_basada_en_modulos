@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage';
 export const PreceptorRoutes = () => {
     return(
         <Routes>
-            <Route path="/home/" element={<HomePage />}/>
+            <Route path="/home/preceptor" element={<HomePage />}/>
         </Routes>
     )
 }

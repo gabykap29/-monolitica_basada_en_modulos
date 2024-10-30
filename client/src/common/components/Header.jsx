@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../auth/context/AuthContext";
 
 const Header = () => {
   const [title, setTitle] = useState("Panel de Control");
+
+  const { logout } = useContext(AuthContext)
 
   useEffect(() => {
     // Mapeo de rutas a títulos
@@ -36,7 +39,7 @@ const Header = () => {
       <div className="btn-toolbar mb-2 mb-md-0">
         <div className="btn-group me-3">
           {/* Enlace a Inicio */}
-          <a href="/pages/home">
+          <a href="/dashboard/">
             <button 
               type="button" 
               className="btn btn-sm btn-outline-light" 
@@ -71,7 +74,7 @@ const Header = () => {
             border: "none", // Sin borde
             transition: "background-color 0.3s", // Transición suave
           }}
-          // onClick={logout}
+          onClick={logout}
           onMouseEnter={(e) => e.currentTarget.style.background = "#c82333"} // Efecto hover
           onMouseLeave={(e) => e.currentTarget.style.background = "#dc3545"} // Efecto hover
         >

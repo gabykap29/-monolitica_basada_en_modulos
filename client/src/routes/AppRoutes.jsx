@@ -5,13 +5,14 @@ import LoginPage from '../auth/pages/LoginPage';
 import { PreceptorRoutes } from '../preceptor/routes/PreceptorRoutes';
 import PrivateRoute from './PrivateRoutes';
 import { EstudianteRoutes } from '../estudiantes/routes/EstudianteRoutes';
+import DashboardRoutes from './DashboardRoutes';
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Ruta Principal */}
-        <Route
+        {/* Ruta Principal del Login */}
+        <Route 
           path='/'
           element={
             <PublicRoute>
@@ -21,8 +22,16 @@ const AppRoutes = () => {
         />
 
         {/* Rutas Privadas */}
+        <Route 
+          path='/dashboard/*'
+          element={
+            <PrivateRoute>
+              <DashboardRoutes />
+            </PrivateRoute>
+          }
+        />
         <Route
-          path='/IPF/*'
+         path='/IPF/*'
           element={
             <PrivateRoute>
               <PreceptorRoutes />
@@ -30,7 +39,6 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
-
       </Routes>
     </BrowserRouter>
   )

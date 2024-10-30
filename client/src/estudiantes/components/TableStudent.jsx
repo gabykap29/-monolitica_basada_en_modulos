@@ -14,7 +14,7 @@ const TableStudent = () => {
   // Obtiene estudiantes desde la API (solo una vez al montar el componente)
   useEffect(() => {
     const fetchUsers = async () => {
-      const data = await fetchStudent("/users", "GET", null);
+      const data = await fetchStudent("/users/student", "GET", null);
       dispatchStudents({ type: typeAction.SET_DATA, payload: data.users });
     };
     fetchUsers();

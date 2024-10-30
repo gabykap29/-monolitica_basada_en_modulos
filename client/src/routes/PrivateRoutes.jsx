@@ -1,16 +1,17 @@
-import { useContext } from "react";
+import { useContext, } from "react";
 import { AuthContext } from "../auth/context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-    const { auth } = useContext(AuthContext);
-  
-    // Muestra una pantalla de carga si isAuthenticated es false
-    // if (auth.isAuthenticated === false) {
-    //   return <h1>Verificando...</h1>;
-    // }
-  
-    // Redirige a la página de inicio si no está autenticado
-    return  children 
-  };
-  
-  export default PrivateRoute;
+  const { auth } = useContext(AuthContext);
+
+  const token = localStorage.getItem("token")
+
+  if(auth.isAuthenticated === false && token) {
+    return <h2>Loading...</h2>
+  }
+
+  return token ? children : <Navigate to={"/"} />;
+};
+
+export default PrivateRoute;

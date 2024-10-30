@@ -1,5 +1,6 @@
 import { createContext, useReducer, useState } from "react";
 import { authReducer } from '../reducer/AuthReducer';
+import { typeAuth } from "../../common/types/type";
 
 // Se crea el contexto
 export const AuthContext = createContext(null)
@@ -15,14 +16,12 @@ export const AuthProvider = ({children}) => {
       isAuthenticated: token ? true: false
     })
 
-    console.log("Auth: ", auth)
-
     // Función para manejar el login
   const login = (data) => {
     setLoading(true);
     setError(null);
     try {
-      // Guardar token y usuario en localStorage
+      // Guardar token en LocalStorage
       localStorage.setItem("token", data.token);
 
       dispatchAuth({
@@ -41,6 +40,7 @@ export const AuthProvider = ({children}) => {
   // Función para manejar el logout
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     dispatchAuth({
       type: typeAuth.LOGOUT,
       payload: {

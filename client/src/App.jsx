@@ -37,13 +37,37 @@ const App = () => {
     console.log("Eventos actuales:", events);
   }, [events]);
 
+  const CustomToolbar = (toolbar) => {
+    const goToBack = () => {
+      toolbar.onNavigate('PREV');
+    };
+
+    const goToNext = () => {
+      toolbar.onNavigate('NEXT');
+    };
+
+    const goToCurrent = () => {
+      toolbar.onNavigate('TODAY');
+    };
+
+    return (
+      <div>
+        <button onClick={goToBack}>Anterior</button>
+        <button onClick={goToNext}>Siguiente</button>
+        <button onClick={goToCurrent}>Hoy</button>
+        {/* Puedes agregar más botones aquí si lo deseas */}
+      </div>
+    );
+  };
+
   const components = {
     event: ({ event }) => (
       <div style={{ backgroundColor: (event.title === "Presente" ? "green" : "red") }}>
         {event.title === "Presente" ? <FaCheck /> : <MdOutlineCancel />}
         {event.title}
       </div>
-    )
+    ),
+    // toolbar: CustomToolbar
   }
 
   const payload = {
@@ -116,7 +140,7 @@ const App = () => {
           height: 500,
           width: 1000
         }}
-        views={["month", "agenda"]}
+        views={["month", 'agenda']}
         defaultView='month'
         events={events}
         components={components}
@@ -125,6 +149,13 @@ const App = () => {
         selectable // Permite la selección de días
         view={view} // Usar el estado de la vista
         onView={setView}
+        messages={{
+          previous: 'Anterior',
+          next: 'Siguiente',
+          today: 'Hoy',
+          month: "Mes",
+          agenda: "Lista"
+        }}
       />
 
       <form onSubmit={markAttendance}>

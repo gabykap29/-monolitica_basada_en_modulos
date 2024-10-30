@@ -10,8 +10,11 @@ import { userInitial } from '../helpers/userInitial';
 import cron from 'node-cron';
 import dayjs from 'dayjs';
 import { AttendanceService } from "../../Attendance/service/Attendance.services"
+import UserService from "../../Users/service/UserService"
+import { CustomError } from '../helpers/customError';
 
 const attendanceService = new AttendanceService()
+const userService = new UserService()
 
 class Server {
   private app: Application;
@@ -39,6 +42,7 @@ class Server {
     this.app.use('/api/', authRouter);
     this.app.use('/api/', attendanceRouter);
   }
+
   private scheduleTasks(): void {
     cron.schedule('15 9 * * *', async () => {
       console.log('Ejecutando la tarea de marcar ausentes a las 9:15 AM');
@@ -46,23 +50,19 @@ class Server {
         const todayDate = dayjs().format('YYYY-MM-DD')
 
         // TODO: Encuentra a los estudiantes que no tienen un registro de "presente" para el día actual
-        const students = await funcion()
+        const students = await userService.getAllUser("stundent")
         const presentStudents = await attendanceService.findAllByDate({ date: todayDate })
 
-        if (typeof presentStudents !== 'boolean') {
+        if (typeof presentStudents !== 'boolean' && !(students instanceof CustomError)) {
 
-          const absentStudent = students.filter((idStudent: string) => !presentStudents.includes(idStudent));
+
+          const absentStudent = students.filter(student =>
+            !presentStudents.some(present => present.idStudent === student._id)
+          );
 
           // TODO: Agrega el estado de "ausente" para cada estudiante sin asistencia en el día actual
-          const absentPromises = absentStudents.map(student =>
-            Student.updateOne(
-              { _id: student._id },
-              { $push: { attendance: { date: today, status: 'ausente' } } }
-            )
-          );
-          await Promise.all(absentPromises);
 
-          console.log('Registro de ausentes completado');
+          console.log('Registro de ausentes completado')
         }
 
       } catch (error) {
@@ -70,6 +70,7 @@ class Server {
       }
     });
   }
+
   public listen(): void {
     this.app.listen(this.port, '0.0.0.0', async () => {
       await userInitial();

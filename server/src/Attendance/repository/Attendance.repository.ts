@@ -35,7 +35,7 @@ export class AttendanceRepository {
         }
     }
 
-    async findAllByDate(date: string): Promise<IAttendance[] | boolean> {
+    async findAllByDate(date: string): Promise<IAttendance[]> {
         try {
             const attendance = await Attendance.find({
                 $expr: {
@@ -46,10 +46,8 @@ export class AttendanceRepository {
                 }
             }).populate('idStudent', 'names lastname')
 
-            console.log(attendance);
-
             if (!attendance || attendance.length === 0) {
-                return false;
+                return [];
             }
 
             return attendance;
@@ -59,7 +57,7 @@ export class AttendanceRepository {
         }
     }
 
-    async create(attendance: IAttendance): Promise<IAttendance> {
+    async create(attendance: { idStudent: string, isPresent: boolean }): Promise<IAttendance> {
         try {
             const newAttendance: IAttendance = await Attendance.create(attendance)
 
@@ -69,6 +67,28 @@ export class AttendanceRepository {
             console.log(error);
             throw new Error(
                 error instanceof Error ? error.message.includes("duplicate key") ? "La asistencia ya esta marcada para el dia de hoy" : "Error al crear una asistencia" : "Error al crear una asistencia");
+        }
+    }
+
+    async update(attendance: { idAttendance: string, isPresent: boolean }): Promise<boolean> {
+        try {
+
+            console.log(attendance);
+
+
+            const updatedAttendance: IAttendance | null = await Attendance.findByIdAndUpdate(attendance.idAttendance,
+                { isPresent: attendance.isPresent },
+                { new: true })
+
+
+            console.log(updatedAttendance);
+
+
+            return updatedAttendance ? true : false
+
+        } catch (error) {
+            console.log(error);
+            throw new Error("Error al actualizar una asistencia")
         }
     }
 

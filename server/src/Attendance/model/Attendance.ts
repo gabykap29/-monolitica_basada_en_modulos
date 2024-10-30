@@ -1,11 +1,17 @@
 import { Schema, Document, model, ObjectId } from "mongoose";
 import dayjs from "dayjs";
 
+export interface IstudentData {
+    _id: ObjectId | string;
+    names: string;
+    lastname: string;
+}
+
 export interface IAttendance extends Document {
-    idStudent: ObjectId | string,
-    isPresent: boolean,
-    createdAt?: Date;  
-    updatedAt?: Date;  
+    idStudent: IstudentData | string;
+    isPresent: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const AttendanceSchema = new Schema<IAttendance>({
@@ -31,7 +37,7 @@ AttendanceSchema.pre("save", function (next) {
 
 AttendanceSchema.index(
     { idStudent: 1, createdAt: 1 },
-    { unique: true}
+    { unique: true }
 );
 
 export const Attendance = model('Attendance', AttendanceSchema);

@@ -1,0 +1,26 @@
+import Swal from 'sweetalert2';
+import iziToast from "izitoast"
+// Función auxiliar para manejar un registro exitoso
+export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
+    createStudent(data);
+  
+    // Notifica al usuario
+    Swal.fire({
+      icon: "success",
+      title: "Excelente",
+      text: data.message,
+    });
+  
+    // Reinicia formulario y redirige
+    reset();
+    navigate("/IPF/students/");
+  };
+  
+  // Función auxiliar para manejar un error de inicio de sesión
+  export const handleRegisterFailure = (message) => {
+    iziToast.error({
+        title: "Error",
+        message: message || "Error interno en el servidor",
+        position: "topRight",
+    });
+};

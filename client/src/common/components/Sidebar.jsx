@@ -47,7 +47,7 @@ const Sidebar = () => {
     >
       {/* Logo */}
       <a
-        href="/"
+        href="/IPF/home/"
         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
       >
         <svg

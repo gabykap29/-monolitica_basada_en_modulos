@@ -1,3 +1,5 @@
+import { StudentProvider } from './estudiantes/context/StudentContext';
+import AppRoutes from './routes/AppRoutes';
 import { useEffect, useState, useRef } from 'react'
 import { Calendar, dayjsLocalizer } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
@@ -171,3 +173,11 @@ const App = () => {
 }
 
 export default App
+  return (
+    <StudentProvider>
+      <AppRoutes />
+    </StudentProvider>
+  );
+};
+
+export default App;

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import HomePage from '../preceptor/pages/HomePage';
+import HomePageStudent from '../estudiantes/HomePageStudent';
+import HomePageAdmin from '../directivos/HomePageAdmin';
 
 const DashboardRoutes = () => {
   const role = localStorage.getItem("role");
@@ -8,9 +10,9 @@ const DashboardRoutes = () => {
   // Redirige según el rol
   switch (role) {
     case 'student':
-      return <Navigate to="home/student" />;
+      return <HomePageStudent />;
     case 'admin':
-      return <Navigate to="home/admin" />;
+      return <HomePageAdmin />;
     case 'preceptor':
       return <HomePage />
     default:

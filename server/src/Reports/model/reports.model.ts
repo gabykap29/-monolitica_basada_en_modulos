@@ -10,6 +10,7 @@ export interface IReport extends Document {
   typeReport: TypeReport;
   date: Date;
   details: string;
+  createdAt: Date;
 }
 
 const ReportSchema = new Schema<IReport>({

@@ -1,4 +1,5 @@
 import { IAttendance, Attendance } from "../model/Attendance"
+import dayjs from "dayjs"
 
 export class AttendanceRepository {
 
@@ -29,6 +30,28 @@ export class AttendanceRepository {
                 return false
             }
             return attendance
+
+        } catch (error) {
+            throw new Error("Error al buscar las asistencias del estudiante");
+        }
+    }
+
+    async findAllAgrupedByDate(month: string): Promise<IAttendance[] | boolean> {
+        try {
+            // Define el rango de fechas del primer al último día del mes
+            const startDate = dayjs(month).startOf("month").toDate();
+            const endDate = dayjs(month).endOf("month").toDate();
+
+            // Busca asistencias dentro del rango de fechas
+            const attendance = await Attendance.find({
+                createdAt: { $gte: startDate, $lte: endDate }
+            });
+
+            // Verifica si se encontraron resultados
+            if (!attendance || attendance.length === 0) {
+                return false;
+            }
+            return attendance;
 
         } catch (error) {
             throw new Error("Error al buscar las asistencias del estudiante");

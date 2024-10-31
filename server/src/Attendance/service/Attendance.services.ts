@@ -4,6 +4,7 @@ import UserService from "../../Users/service/UserService"
 import { CustomError } from "../../Server/helpers/customError";
 import dayjs from "dayjs";
 
+
 const userService = new UserService()
 
 export class AttendanceService {
@@ -61,6 +62,32 @@ export class AttendanceService {
                 (idUser);
 
             return attendances
+
+        } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error ? error.message : "Error al buscar las asistencia del estudiante"
+            );
+        }
+    }
+
+    public async findAttendancesGroupedByDate(month: string) {
+        try {
+            const attendances = await this.AttendanceRepository.findAllAgrupedByDate(month);
+
+            if (typeof attendances !== "boolean") {
+                const formatedAttendances = {
+                    [month]: attendances.map((attendance) => ({
+                        [dayjs(attendance.createdAt).format("DD")]: {
+                            start: attendance.updatedAt,
+                            end: attendance.createdAt,
+                            title: attendance.isPresent
+                        }
+                    })).reduce((acc, obj) => Object.assign(acc, obj), {})
+                };
+
+                return formatedAttendances;
+            }
 
         } catch (error) {
             console.log(error);

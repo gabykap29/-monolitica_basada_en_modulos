@@ -45,7 +45,7 @@ export class AttendanceController {
         }
     }
 
-    getAttendanceByUser = async (req: Request, res: Response): Promise<void> => {
+    getAttendanceById = async (req: Request, res: Response): Promise<void> => {
         try {
 
             const attendance = await this.AttendanceService.findOneAttendance(req.params.attendance);
@@ -68,6 +68,25 @@ export class AttendanceController {
         try {
 
             const attendances = await this.AttendanceService.findAllByDate(req.body);
+
+            res.status(200).json({
+                status: 200,
+                attendances: attendances
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
+    getAttendancesByMonth = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendances = await this.AttendanceService.findAttendancesGroupedByDate(req.params.month);
 
             res.status(200).json({
                 status: 200,

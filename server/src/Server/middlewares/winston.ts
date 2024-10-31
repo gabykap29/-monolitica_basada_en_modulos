@@ -1,5 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import winston from 'winston';
+import { decodeToken } from '../../Auth/helpers/jwt';
+
+async function extractUsername(header: string) {
+  if (!header) {
+    return 'No logged';
+  }
+  const user = decodeToken(header);
+  if (user === false || user === true) {
+    return 'No logged';
+  }
+
+  return user.username;
+}
 
 const logger = winston.createLogger({
   level: 'info',
@@ -20,13 +33,15 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Middleware de registro
-export const loggerMiddleware = (
+export const loggerMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction,
-): void => {
+): Promise<void> => {
+  const header = req.headers.authorization || '';
+  const username = await extractUsername(header);
   logger.info(
-    `Method: ${req.method} - URL: ${req.url} - Status: ${res.statusCode}`,
+    `Usuario: ${username} Cliente: ${req.ip || req.headers['x-forwarded-for']}  Method: ${req.method} - URL: ${req.url} - Status: ${res.statusCode},`,
   );
   next();
 };

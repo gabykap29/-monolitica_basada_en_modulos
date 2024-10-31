@@ -68,6 +68,39 @@ class ReportsController {
       res.status(500).json({ message: 'Error al obtener el reporte', error: error instanceof Error ? error.message : error });
     }
   };
+
+  public getAllPDFs: RequestHandler = (_req: Request, res: Response) => {
+    try {
+      const pdfList = this.reportsService.listAllPDFs();
+
+      if (pdfList.length === 0) {
+        res.status(404).json({ message: 'No hay reportes PDF disponibles' });
+        return;
+      }
+
+      res.status(200).json(pdfList);
+    } catch (error) {
+      console.error('Error al obtener los reportes PDF:', error);
+      res.status(500).json({ message: 'Error al obtener los reportes PDF', error: error instanceof Error ? error.message : error });
+    }
+  };
+
+  public getPDFByName: RequestHandler = (req: Request, res: Response) => {
+    try {
+      const { filename } = req.params;
+      const pdfFile = this.reportsService.getPDFContentByName(filename);
+
+      if (!pdfFile) {
+        res.status(404).json({ message: 'Reporte PDF no encontrado' });
+        return;
+      }
+
+      res.status(200).json(pdfFile);
+    } catch (error) {
+      console.error('Error al obtener el contenido del reporte PDF:', error);
+      res.status(500).json({ message: 'Error al obtener el contenido del reporte PDF', error: error instanceof Error ? error.message : error });
+    }
+  };
 }
 
 export default new ReportsController();

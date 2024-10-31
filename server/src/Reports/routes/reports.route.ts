@@ -7,5 +7,7 @@ router.post('/reports', ReportsController.createReport);
 router.get('/reports', ReportsController.getAllReports);
 router.get('/reports/:id', ReportsController.getReportById);
 router.delete('/reports/:id', ReportsController.deleteReport);
+router.get('/pdf-reports', ReportsController.getAllPDFs);
+router.get('/pdf-reports/:filename', ReportsController.getPDFByName);
 
 export default router;

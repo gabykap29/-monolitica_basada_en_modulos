@@ -77,18 +77,28 @@ export class AttendanceService {
 
             if (typeof attendances !== "boolean") {
                 const formatedAttendances = {
-                    [month]: attendances.map((attendance) => ({
-                        [dayjs(attendance.createdAt).format("DD")]: {
+                    [month]: attendances.reduce((acc, attendance) => {
+                        const day = dayjs(attendance.createdAt).format("DD");
+                        // Si el día no existe aún en el acumulador, lo inicializamos como un array vacío
+                        if (!acc[day]) {
+                            acc[day] = [];
+                        }
+                        // Agregamos la asistencia del día al array
+                        acc[day].push({
+                            _id: attendance._id,
+                            idStudent: attendance.idStudent,
                             start: attendance.updatedAt,
                             end: attendance.createdAt,
                             title: attendance.isPresent
-                        }
-                    })).reduce((acc, obj) => Object.assign(acc, obj), {})
-                };
+                        });
 
-                return formatedAttendances;
+                        return acc
+
+                    }, {} as Record<string, Array<{ _id: string | unknown; idStudent: any; start: Date | undefined; end: Date | undefined; title: boolean }>>)
+                }
+
+                return formatedAttendances
             }
-
         } catch (error) {
             console.log(error);
             throw new Error(

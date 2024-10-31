@@ -6,14 +6,20 @@ const attendanceController = new AttendanceController();
 
 const router = Router();
 
-router.get("/attendance/:attendance", attendanceController.getAttendanceByUser);
+router.get("/attendance/:attendance", attendanceController.getAttendanceById);
 
-router.get("/attendances/:id", attendanceController.getAllAttendancesByUser);
+router.get("/attendances/:id", AllowRequest.isAllowed, attendanceController.getAllAttendancesByUser);
 
-router.get("/attendancesDate/:date", AllowRequest.isAllowed, AllowRequest.whereRequest, attendanceController.getAttendancesByDate);
+router.get("/attendancesMonth/:month", AllowRequest.isAllowed, attendanceController.getAttendancesByMonth);
 
 router.post("/attendance", attendanceController.createAttendance);
 
-router.delete("/attendance", attendanceController.createAttendance);
+router.post("/absent", AllowRequest.isAllowed, attendanceController.createAbsent);
+
+router.post("/attendances/", AllowRequest.isAllowed, AllowRequest.whereRequest, attendanceController.getAttendancesByDate);
+
+router.delete("/attendance/:id", AllowRequest.isAllowed, attendanceController.deleteAttendance);
+
+router.put("/attendance", AllowRequest.isAllowed, attendanceController.updateAttendance);
 
 export default router;

@@ -26,7 +26,26 @@ export class AttendanceController {
         }
     }
 
-    getAttendanceByUser = async (req: Request, res: Response): Promise<void> => {
+    createAbsent = async (_req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendance = await this.AttendanceService.markAbsent();
+
+            res.status(200).json({
+                status: 200,
+                attendance: attendance
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
+    getAttendanceById = async (req: Request, res: Response): Promise<void> => {
         try {
 
             const attendance = await this.AttendanceService.findOneAttendance(req.params.attendance);
@@ -48,7 +67,26 @@ export class AttendanceController {
     getAttendancesByDate = async (req: Request, res: Response): Promise<void> => {
         try {
 
-            const attendances = await this.AttendanceService.findAllByDate(req.params.date);
+            const attendances = await this.AttendanceService.findAllByDate(req.body);
+
+            res.status(200).json({
+                status: 200,
+                attendances: attendances
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
+    getAttendancesByMonth = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendances = await this.AttendanceService.findAttendancesGroupedByDate(req.params.month);
 
             res.status(200).json({
                 status: 200,
@@ -72,6 +110,25 @@ export class AttendanceController {
             res.status(200).json({
                 status: 200,
                 attendances: attendances
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
+    updateAttendance = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendance = await this.AttendanceService.updateAttendance(req.body);
+
+            res.status(200).json({
+                status: 200,
+                attendance: attendance
             });
 
         } catch (error) {

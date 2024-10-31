@@ -7,6 +7,7 @@ async function extractUsername(header: string) {
     return 'No logged';
   }
   const user = decodeToken(header);
+
   if (user === false || user === true) {
     return 'No logged';
   }

@@ -6,6 +6,7 @@ import { PORT } from '../config/config';
 import userRouter from '../../Users/routes/users.routes';
 import authRouter from '../../Auth/routes/auth.routes';
 import { userInitial } from '../helpers/userInitial';
+import { loggerMiddleware } from '../middlewares/winston';
 
 class Server {
   private app: Application;
@@ -25,6 +26,7 @@ class Server {
   private async middlewares(): Promise<void> {
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(loggerMiddleware);
   }
   private routes(): void {
     this.app.use(routerTest);

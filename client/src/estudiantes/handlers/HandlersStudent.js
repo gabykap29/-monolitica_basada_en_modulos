@@ -1,5 +1,8 @@
 import iziToast from "izitoast"
 import 'izitoast/dist/css/iziToast.min.css';
+import { fetchStudent } from "../services/StudentService";
+import { useContext } from "react";
+import { AuthContext } from '../../auth/context/AuthContext';
 
 // Función auxiliar para manejar un registro exitoso
 export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
@@ -34,4 +37,26 @@ export const handleEditSuccess = (message, navigate) => {
     })
 
     navigate("/IPF/students/")
+}
+
+export const handleDeleteStudent = async(id, deleteStudent) => {
+  try {
+    const data = await fetchStudent(`users/${id}`, "DELETE", null)
+
+    deleteStudent(id)
+    // Notifica al usuario
+    iziToast.success({
+      title: "Éxito",
+      message: data.message,
+      position: "topRight",
+    });
+    
+  } catch (error) {
+    iziToast.error({
+        title: "Error",
+        message: "Error interno en el servidor",
+        position: "topRight",
+    });
+    console.error("Error al eliminar el estudiante", error)
+  }
 }

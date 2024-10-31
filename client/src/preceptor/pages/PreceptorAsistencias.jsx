@@ -17,54 +17,35 @@ export const PreceptorCalendar = () => {
     const [date, setDate] = useState(null)
     const [view, setView] = useState('month');
 
-
     useEffect(() => {
         (async () => {
-            const response = await useApiFetch("/attendances", "GET", "", "671fa1df22b4b21baf289d93")
+            const response = await useApiFetch("/attendancesMonth", "GET", "", dayjs().format("YYYY-MM"))
 
+            if (response.status === 200) {
+                const attendancesData = [ ]
+                
+                
+                response.attendances[`${dayjs().format("YYYY-MM")}`][`${dayjs().format("DD")}`];
+                // Asegurarse de aplanar y formatear los eventos correctamente
 
-            // await fetch("http://localhost:4000/api/attendances/671fa1df22b4b21baf289d93")
-            // const data = await response.json()
+                const formattedEvents = attendancesData?.map(attendance => ({
+                    start: new Date(attendance.start),
+                    end: new Date(attendance.end),
+                    title: attendance.title ? "Presente" : "Ausente"
+                })) || [];
 
-            const formattedData = response?.attendances?.map((attendance) => ({
-                id: attendance._id,
-                start: dayjs(attendance.createdAt).toDate(),
-                end: dayjs(attendance.createdAt).toDate(),
-                title: attendance.isPresent ? "Presente" : "Ausente",
-                idStudent: attendance.idStudent,
-            }))
+                setEvents(formattedEvents);
+                3
+                console.log("EVENTOS FETCH");
 
-
-            setEvents(formattedData)
+                console.log(events);
+            }
         })()
     }, [])
 
     useEffect(() => {
         console.log("Eventos actuales:", events);
     }, [events]);
-
-    const CustomToolbar = (toolbar) => {
-        const goToBack = () => {
-            toolbar.onNavigate('PREV');
-        };
-
-        const goToNext = () => {
-            toolbar.onNavigate('NEXT');
-        };
-
-        const goToCurrent = () => {
-            toolbar.onNavigate('TODAY');
-        };
-
-        return (
-            <div>
-                <button onClick={goToBack}>Anterior</button>
-                <button onClick={goToNext}>Siguiente</button>
-                <button onClick={goToCurrent}>Hoy</button>
-                {/* Puedes agregar más botones aquí si lo deseas */}
-            </div>
-        );
-    };
 
     const components = {
         event: ({ event }) => (
@@ -73,7 +54,6 @@ export const PreceptorCalendar = () => {
                 {event.title}
             </div>
         ),
-        // toolbar: CustomToolbar
     }
 
     const payload = {
@@ -96,7 +76,7 @@ export const PreceptorCalendar = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(payload), // Asegúrate de incluir la fecha
+            body: JSON.stringify(payload),
         })
 
         const data = await response.json()

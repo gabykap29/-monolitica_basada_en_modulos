@@ -13,7 +13,7 @@ export const StudentProvider = ({ children }) => {
     try {
       dispatchStudents({ type: typeAction.SET_DATA, payload: data });
     } catch (error) {
-      console.error("Error al traer los estudiante. Inténtalo de nuevo.", error);
+      console.error("Error al traer los estudiantes. Inténtalo de nuevo.", error);
     }
   }
 

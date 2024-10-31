@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../auth/context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [title, setTitle] = useState("Panel de Control");
@@ -39,7 +40,7 @@ const Header = () => {
       <div className="btn-toolbar mb-2 mb-md-0">
         <div className="btn-group me-3">
           {/* Enlace a Inicio */}
-          <a href="/dashboard/">
+          <Link to="/dashboard/">
             <button 
               type="button" 
               className="btn btn-sm btn-outline-light" 
@@ -57,7 +58,7 @@ const Header = () => {
             >
               Inicio
             </button>
-          </a>
+          </Link>
         </div>
 
         {/* Botón de cuenta con ícono */}

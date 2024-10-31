@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
   const [currentPath, setCurrentPath] = useState("");
@@ -46,8 +47,8 @@ const Sidebar = () => {
       }}
     >
       {/* Logo */}
-      <a
-        href="/dashboard/"
+      <Link
+        to="/dashboard/"
         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
       >
         <svg
@@ -59,15 +60,15 @@ const Sidebar = () => {
           <use xlinkHref="#bootstrap" />
         </svg>
         <span className="fs-4 fw-bold">Asistencia IPF</span>
-      </a>
+      </Link>
 
       <hr style={{ borderColor: "#495057" }} />
 
       {/* Nav Links */}
       <ul className="nav flex-column mb-auto">
         <li className="nav-item">
-          <a
-            href="/dashboard/"
+          <Link
+            to="/dashboard/"
             className="nav-link text-white"
             style={{
               ...linkStyle,
@@ -85,15 +86,15 @@ const Sidebar = () => {
               <use xlinkHref="#home" />
             </svg>
             Inicio
-          </a>
+          </Link>
         </li>
         <li className="nav-item" style={{ marginTop: "10px" }}>
-          <a
-            href="/pages/persons/upload-records"
+          <Link
+            to="/IPF/students/"
             className="nav-link text-white"
             style={{
               ...linkStyle,
-              ...(currentPath === "/pages/persons/upload-records" ? activeLinkStyle : {}),
+              ...(currentPath === "/IPF/students/" ? activeLinkStyle : {}),
             }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -106,8 +107,30 @@ const Sidebar = () => {
             >
               <use xlinkHref="#upload-records" />
             </svg>
-            Añadir Registros
-          </a>
+            Estudiantes
+          </Link>
+        </li>
+        <li className="nav-item" style={{ marginTop: "10px" }}>
+          <Link
+            to="/IPF/reports/"
+            className="nav-link text-white"
+            style={{
+              ...linkStyle,
+              ...(currentPath === "/IPF/reports/" ? activeLinkStyle : {}),
+            }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <svg
+              className="bi pe-none me-2"
+              width="20"
+              height="20"
+              fill="currentColor"
+            >
+              <use xlinkHref="#upload-records" />
+            </svg>
+            Reportes
+          </Link>
         </li>
       </ul>
       <hr style={{ borderColor: "#495057" }} />

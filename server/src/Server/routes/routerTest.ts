@@ -2,8 +2,9 @@ import { Router } from 'express';
 import { checkRolAdmin } from '../../Auth/midlewares/checkRol';
 const router = Router();
 
-router.get('/', checkRolAdmin, (_req, res) => {
-  res.send('Servidor On');
+router.get('/', (req, res) => {
+  const clientIp = req.ip;
+  res.send('Servidor On, Public IP: ' + clientIp);
 });
 
 export default router;

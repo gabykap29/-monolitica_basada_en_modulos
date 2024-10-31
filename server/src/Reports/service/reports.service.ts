@@ -15,9 +15,17 @@ export class ReportsService {
 
     let details = '';
     if (typeReport === TypeReport.FreeinMatter) {
-      details = `El alumno ${student.names} ${student.lastname} ha quedado libre en la materia debido a faltas excesivas.`;
+      details = `Por medio de la presente, le informamos que, debido al número de inasistencias registradas en el cuatrimestre actual, ha quedado en condición de alumno libre en las materias que corresponden a su plan de estudios. La normativa vigente establece que para mantener la regularidad es necesario cumplir con al menos un 80% de asistencia en cada materia.
+
+Lamentablemente, su registro de asistencias ha reflejado un número de inasistencias injustificadas que supera el margen permitido para mantener dicha condición. En consecuencia, esta situación lo inhabilita para participar en las actividades regulares y evaluaciones continuas del presente cuatrimestre en las asignaturas afectadas.
+
+Como alumno en condición de "libre", podrá acceder a la instancia de evaluación final de cada asignatura según los requisitos y calendario del cuatrimestre, pero no podrá participar en las clases ni en las evaluaciones parciales. Le recomendamos revisar el reglamento de asistencia de la institución para conocer más detalles sobre sus opciones en esta modalidad y acercarse a los preceptores en caso de necesitar asesoría adicional.`;
     } else if (typeReport === TypeReport.FaultNotice) {
-      details = `El alumno ${student.names} ${student.lastname} ha acumulado muchas faltas (número de faltas).`;
+      details = `Me dirijo a Ud. para informarle que en el registro de asistencias de la carrera se han consignado inasistencias injustificadas en las materias correspondientes a su plan de estudios. Desde el inicio de clases hasta el día de la fecha, se han contabilizado varias ausencias que exceden el límite permitido para conservar la regularidad. Le recordamos que, según el reglamento institucional, uno de los requisitos fundamentales para mantener el estado de alumno regular es que el porcentaje de asistencia sea, como mínimo, del 80%.
+
+Es nuestro deber resaltar que el incumplimiento de este criterio afecta su continuidad en el presente cuatrimestre. La institución considera la asistencia una condición esencial no solo para garantizar su progreso académico, sino también para cumplir con los lineamientos que permiten un aprendizaje continuo y efectivo. De este modo, cualquier ausencia adicional que no esté debidamente justificada podría derivar en la pérdida de su regularidad, con el consecuente pase a condición de alumno libre.
+
+Con la presente notificación, y con el compromiso de apoyarlo en el cumplimiento de sus objetivos académicos, le instamos a tomar las medidas pertinentes para evitar incurrir en nuevas inasistencias injustificadas durante el resto del cuatrimestre. Si necesita orientación o si existen circunstancias excepcionales que puedan estar afectando su asistencia, le recomendamos ponerse en contacto con los preceptores de su área o con la oficina de asistencia estudiantil.`;
     }
 
     // Crear y guardar el reporte en la base de datos
@@ -58,10 +66,12 @@ export class ReportsService {
 
     doc.fontSize(18).text('Reporte de Asistencia', { align: 'center' });
     doc.moveDown();
-    doc.fontSize(14).text(`Alumno: ${studentName}`);
-    doc.text(`Tipo de Reporte: ${typeReport}`);
+    doc.fontSize(13).text(`Alumna/o: ${studentName}`);
+    doc.fontSize(13).text(`Tipo de Reporte: ${typeReport}`);
     doc.moveDown();
-    doc.text(details);
+    doc.fontSize(12).text(details);
+    doc.moveDown();
+    doc.fontSize(12).text('Queda debidamente notificada/o de su situación. Sin otro particular, la/o saludo atentamente.');
 
     doc.end();
   }

@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import { ReportsService } from './../service/reports.service';
 import { TypeReport } from './../model/reports.model';
+import path from 'path';
 
 class ReportsController {
   private reportsService: ReportsService;
@@ -69,33 +70,17 @@ class ReportsController {
     }
   };
 
-  public getAllPDFs: RequestHandler = (_req: Request, res: Response) => {
-    try {
-      const pdfList = this.reportsService.listAllPDFs();
-
-      if (pdfList.length === 0) {
-        res.status(404).json({ message: 'No hay reportes PDF disponibles' });
-        return;
-      }
-
-      res.status(200).json(pdfList);
-    } catch (error) {
-      console.error('Error al obtener los reportes PDF:', error);
-      res.status(500).json({ message: 'Error al obtener los reportes PDF', error: error instanceof Error ? error.message : error });
-    }
-  };
-
   public getPDFByName: RequestHandler = (req: Request, res: Response) => {
     try {
       const { filename } = req.params;
-      const pdfFile = this.reportsService.getPDFContentByName(filename);
+      const filePath = path.join(__dirname, '../../Reports/Docs', filename);
 
-      if (!pdfFile) {
-        res.status(404).json({ message: 'Reporte PDF no encontrado' });
-        return;
-      }
-
-      res.status(200).json(pdfFile);
+      res.download(filePath, (err) => {
+        if (err) {
+          console.error('Error al enviar el archivo:', err);
+          res.status(404).json({ message: 'Reporte PDF no encontrado' });
+        }
+      });
     } catch (error) {
       console.error('Error al obtener el contenido del reporte PDF:', error);
       res.status(500).json({ message: 'Error al obtener el contenido del reporte PDF', error: error instanceof Error ? error.message : error });

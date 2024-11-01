@@ -57,24 +57,6 @@ Con la presente notificación, y con el compromiso de apoyarlo en el cumplimient
     return Report.findByIdAndDelete(reportId).populate('student', 'names lastname');
   }
 
-  public listAllPDFs(): { filename: string; content: string }[] {
-    const docsDirectory = path.join(__dirname, '../../Reports/Docs');
-    const pdfFiles = fs.readdirSync(docsDirectory).filter((file) => file.endsWith('.pdf'));
-
-    if (pdfFiles.length === 0) {
-      return [];
-    }
-
-    return pdfFiles.map((filename) => {
-      const filePath = path.join(docsDirectory, filename);
-      const fileContent = fs.readFileSync(filePath).toString('base64');
-      return {
-        filename,
-        content: fileContent,
-      };
-    });
-  }
-
   // Método para obtener la ruta de un archivo PDF específico
   public getPDFContentByName(filename: string): { filename: string; content: string } | null {
     const filePath = path.join(__dirname, '../../Reports/Docs', filename);

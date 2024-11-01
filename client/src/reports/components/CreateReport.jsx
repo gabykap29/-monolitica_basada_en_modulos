@@ -4,11 +4,13 @@ import { fetchReports } from '../services/ReportService';
 import { ReportContext } from '../context/ReportContext';
 import { useForm } from '../../common/hooks/useForm';
 import { handleCreateReportSuccess, handleReportFailure } from '../handlers/HandlersReports';
+import { useNavigate } from 'react-router-dom';
 
 const CreateReport = ({ isModalOpen, closeForm }) => {
 
   const {students} = useContext(StudentContext)
   const { createReport } = useContext(ReportContext)
+  const navigate = useNavigate()
 
   const { form, handleInputChange, reset } = useForm({
     studentId: "",
@@ -19,11 +21,25 @@ const CreateReport = ({ isModalOpen, closeForm }) => {
     e.preventDefault();
 
     try {
-        const newReport = await fetchReports("reports/", "POST", form)
-        if(newReport) {
+
+        // Encuentra el estudiante correspondiente al studentId
+        const student = students.find(s => s._id === form.studentId);
+
+        // Crea un nuevo reporte con los datos del estudiante
+        const newReport = {
+            ...form,
+            date: new Date().toISOString(), 
+            student: {
+                names: student?.names,
+                lastname: student?.lastname
+            }
+        };
+
+        const createdReport = await fetchReports("reports/", "POST", form)
+        if(createdReport) {
             handleCreateReportSuccess(newReport, reset, createReport)
         } else {
-            handleReportFailure(newReport.message || "Error Interno en el servidor" )
+            handleReportFailure(createdReport.message || "Error Interno en el servidor" )
         }
     } catch (error) {
         handleReportFailure(newReport.message || "Error Interno en el servidor" )

@@ -1,25 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
-import { fetchStudent } from "../services/StudentService";
-import { typeAction } from "../../common/types/type";
 import { StudentContext } from "../context/StudentContext";
 import InformationStudent from "./InformationStudent";
 import { Link } from "react-router-dom";
 import { handleDeleteStudent } from "../handlers/HandlersStudent";
 
 const TableStudent = () => {
-  const { dispatchStudents, students, deleteStudent, findAllStudents } = useContext(StudentContext);
+  const {  students, deleteStudent } = useContext(StudentContext);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  // Obtiene estudiantes desde la API (solo una vez al montar el componente)
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await fetchStudent("/users/student", "GET", null);
-      findAllStudents(data.users)
-    };
-    fetchUsers();
-  }, [dispatchStudents]);
 
   // Mostrar Modal
   const handleViewDetails = (user) => {

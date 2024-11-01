@@ -9,7 +9,7 @@ export const handleCreateReportSuccess = (data, reset, createReport) => {
   // Notifica al usuario
   iziToast.success({
     title: "Éxito",
-    message: "Reporte creado exitósamente",
+    message: "Reporte creado Exitosamente",
     position: "topRight",
   });
 

@@ -1,6 +1,7 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { actionsReducer } from "../reducer/ActionsReducer";
 import { typeAction } from "../../common/types/type";
+import { fetchStudent } from "../services/StudentService";
 
 export const StudentContext = createContext();
 
@@ -16,6 +17,15 @@ export const StudentProvider = ({ children }) => {
       console.error("Error al traer los estudiantes. Inténtalo de nuevo.", error);
     }
   }
+
+  // Carga los estudiantes cuando se carga el componente
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const data = await fetchStudent("/users/student", "GET", null);
+      findAllStudents(data.users)
+    };
+    fetchUsers();
+  }, []);
 
   const createStudent = (data) => {
     try {

@@ -57,21 +57,6 @@ Con la presente notificación, y con el compromiso de apoyarlo en el cumplimient
     return Report.findByIdAndDelete(reportId).populate('student', 'names lastname');
   }
 
-  // Método para obtener la ruta de un archivo PDF específico
-  public getPDFContentByName(filename: string): { filename: string; content: string } | null {
-    const filePath = path.join(__dirname, '../../Reports/Docs', filename);
-
-    if (!fs.existsSync(filePath)) {
-      return null;
-    }
-
-    const fileContent = fs.readFileSync(filePath).toString('base64');
-    return {
-      filename,
-      content: fileContent,
-    };
-  }
-
   private async createReportPDF(studentName: string, typeReport: TypeReport, details: string) {
     const doc = new PDFDocument();
     const filePath = path.join(__dirname, `../../Reports/Docs/${studentName}_${typeReport}.pdf`);

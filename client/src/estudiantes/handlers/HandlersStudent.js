@@ -20,7 +20,7 @@ export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
     navigate("/IPF/students/");
 };
   
-  // Función auxiliar para manejar un error de inicio de sesión
+  // Función auxiliar para manejar un error de estudiantes
 export const handleFailure = (message) => {
     iziToast.error({
         title: "Error",

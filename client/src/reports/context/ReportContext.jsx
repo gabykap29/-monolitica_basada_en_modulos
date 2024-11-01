@@ -17,9 +17,20 @@ export const ReportProvider = ({children}) => {
         }
     }
 
+    const deleteReport = (id) => {
+        try {
+          dispatchReports({
+            type: typeAction.DELETE_DATA,
+            payload: id
+          })
+        } catch (error) {
+          console.error("Error al eliminar el reporte. Inténtalo de nuevo.", error);
+        }
+    }
+
     return(
         <ReportContext.Provider
-        value={{reports: state.reports, findAllReports, dispatchReports}}
+        value={{reports: state.reports, findAllReports, dispatchReports, deleteReport}}
         >
             {children}
         </ReportContext.Provider>

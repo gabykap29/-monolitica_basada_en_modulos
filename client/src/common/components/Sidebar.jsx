@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
+import { AiFillHome } from 'react-icons/ai'; 
+import { BsFillPersonFill } from 'react-icons/bs'; 
+import { GiArchiveRegister } from 'react-icons/gi'; 
+import { FaUserShield } from 'react-icons/fa'; 
 
 const Sidebar = () => {
   const [currentPath, setCurrentPath] = useState("");
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     // Obtener la ruta actual
     const path = window.location.pathname;
     setCurrentPath(path || '/dashboard/');
-  }, []); // Se ejecuta solo una vez al montar el componente
+  }, []); 
 
-  // Estilos y efectos hover
+  
   const activeLinkStyle = {
     backgroundColor: "#495057",
     borderRadius: "5px",
@@ -26,15 +31,15 @@ const Sidebar = () => {
   };
 
   const handleMouseEnter = (e) => {
-    e.currentTarget.style.backgroundColor = "#6c757d"; // Efecto hover
-    e.currentTarget.style.transform = "scale(1.02)"; // Efecto de zoom
+    e.currentTarget.style.backgroundColor = "#6c757d"; 
+    e.currentTarget.style.transform = "scale(1.02)"; 
   };
 
   const handleMouseLeave = (e) => {
     if (currentPath !== e.currentTarget.pathname) {
-      e.currentTarget.style.backgroundColor = ""; // Elimina el fondo al salir
+      e.currentTarget.style.backgroundColor = "";
     }
-    e.currentTarget.style.transform = "scale(1)"; // Elimina el efecto de zoom
+    e.currentTarget.style.transform = "scale(1)"; 
   };
 
   return (
@@ -72,66 +77,72 @@ const Sidebar = () => {
             className="nav-link text-white"
             style={{
               ...linkStyle,
-              ...(currentPath === "/pages/home" ? activeLinkStyle : {}),
+              ...(currentPath === "/dashboard/" ? activeLinkStyle : {}),
             }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <svg
-              className="bi pe-none me-2"
-              width="20"
-              height="20"
-              fill="currentColor"
-            >
-              <use xlinkHref="#home" />
-            </svg>
+            <AiFillHome className="me-2" size={20} />
             Inicio
           </Link>
         </li>
-        <li className="nav-item" style={{ marginTop: "10px" }}>
-          <Link
-            to="/IPF/students/"
-            className="nav-link text-white"
-            style={{
-              ...linkStyle,
-              ...(currentPath === "/IPF/students/" ? activeLinkStyle : {}),
-            }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <svg
-              className="bi pe-none me-2"
-              width="20"
-              height="20"
-              fill="currentColor"
-            >
-              <use xlinkHref="#upload-records" />
-            </svg>
-            Estudiantes
-          </Link>
-        </li>
-        <li className="nav-item" style={{ marginTop: "10px" }}>
-          <Link
-            to="/IPF/reports/"
-            className="nav-link text-white"
-            style={{
-              ...linkStyle,
-              ...(currentPath === "/IPF/reports/" ? activeLinkStyle : {}),
-            }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <svg
-              className="bi pe-none me-2"
-              width="20"
-              height="20"
-              fill="currentColor"
-            >
-              <use xlinkHref="#upload-records" />
-            </svg>
-            Reportes
-          </Link>
-        </li>
+        {
+          (role === "admin" || role === "preceptor") && (
+            <li className="nav-item" style={{ marginTop: "10px" }}>
+              <Link
+                to="/IPF/students/"
+                className="nav-link text-white"
+                style={{
+                  ...linkStyle,
+                  ...(currentPath === "/IPF/students/" ? activeLinkStyle : {}),
+                }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <BsFillPersonFill className="me-2" size={20} />
+                Estudiantes
+              </Link>
+            </li>
+          )
+        }
+        {
+          (role === "admin" || role === "preceptor") && (
+            <li className="nav-item" style={{ marginTop: "10px" }}>
+              <Link
+                to="/IPF/reports/"
+                className="nav-link text-white"
+                style={{
+                  ...linkStyle,
+                  ...(currentPath === "/IPF/reports/" ? activeLinkStyle : {}),
+                }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <GiArchiveRegister className="me-2" size={20} />
+                Reportes
+              </Link>
+            </li>
+          )
+        }
+        {
+          role === "admin" && (
+            <li className="nav-item" style={{ marginTop: "10px" }}>
+              <Link
+                to="/IPF/audits/"
+                className="nav-link text-white"
+                style={{
+                  ...linkStyle,
+                  ...(currentPath === "/IPF/audits/" ? activeLinkStyle : {}),
+                }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <FaUserShield className="me-2" size={20} />
+                Auditoría
+              </Link>
+            </li>
+          )
+        }
       </ul>
       <hr style={{ borderColor: "#495057" }} />
 
@@ -144,7 +155,7 @@ const Sidebar = () => {
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          <strong>Admin</strong>
+          <strong>{role}</strong>
         </a>
         <ul
           className="dropdown-menu dropdown-menu-dark text-small shadow"
@@ -167,9 +178,6 @@ const Sidebar = () => {
               </a>
             </li>
           ))}
-          <li>
-            <hr className="dropdown-divider" />
-          </li>
         </ul>
       </div>
     </div>

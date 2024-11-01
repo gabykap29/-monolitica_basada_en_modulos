@@ -20,6 +20,13 @@ const CardReports = () => {
     fetchReportsData();
   }, [dispatchReports]);
 
+  const BuscarPdf = (filename) => {
+    const encodedFilename = encodeURIComponent(filename);
+    const url = `http://localhost:4000/api/pdf-reports/${encodedFilename}`;
+    // Usar window.open para abrir la URL en una nueva pestaña
+    window.open(url, "_blank");
+  };
+
 
   const filteredReports = reports.filter((report) =>
     selectedType === "Todos" ? true : report.typeReport === selectedType
@@ -50,7 +57,7 @@ const CardReports = () => {
                   <p className="card-text"><strong>Fecha:</strong> {report.date}</p>
                   <p className="card-text"><strong>Tipo de Reporte:</strong> {report.typeReport}</p>
                   <div className="d-flex justify-content-between mt-3">
-                    <button className="btn btn-link text-primary p-0">
+                    <button className="btn btn-link text-primary p-0" onClick={() => BuscarPdf(report.pdfFilename)}>
                       <FaFilePdf size={20} />
                     </button>
                     <button

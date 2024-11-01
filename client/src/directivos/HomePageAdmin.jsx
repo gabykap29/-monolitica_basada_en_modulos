@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "../common/components/Header";
 import Sidebar from "../common/components/Sidebar";
-import { CardData } from "../preceptor/content/CardData";
+import { CardDataAdmin } from "./content/CardData";
 
 const HomePageAdmin = () => {
 
@@ -20,7 +20,7 @@ const HomePageAdmin = () => {
             <div className="container mt-4">
               <div className="row g-4">
                 {
-                  CardData.map( (card, index) => (
+                  CardDataAdmin.map( (card, index) => (
                     <div key={index} className="col-md-6">
                       <div className="card shadow-lg border-0" style={{ backgroundColor: card.background, borderRadius: '15px' }}>
                         <div className="card-body text-white">

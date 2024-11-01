@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoutes';
 import { EstudianteRoutes } from '../estudiantes/routes/EstudianteRoutes';
 import DashboardRoutes from './DashboardRoutes';
 import { ReportsRoutes } from '../reports/routes/ReportsRoutes';
+import { AuditsRoutes } from '../auditoria/routes/AuditRoutes';
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
               <PreceptorRoutes />
               <EstudianteRoutes />
               <ReportsRoutes/>
+              <AuditsRoutes />
             </PrivateRoute>
           }
         />

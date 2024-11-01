@@ -17,6 +17,17 @@ export const ReportProvider = ({children}) => {
         }
     }
 
+    const createReport = (data) => {
+        try {
+          dispatchReports({ 
+            type: typeAction.ADD_DATA, 
+            payload: data 
+          });
+        } catch (error) {
+          console.error("Error al crear el reporte. Inténtalo de nuevo.", error);
+        }
+      }
+
     const deleteReport = (id) => {
         try {
           dispatchReports({
@@ -30,7 +41,7 @@ export const ReportProvider = ({children}) => {
 
     return(
         <ReportContext.Provider
-        value={{reports: state.reports, findAllReports, dispatchReports, deleteReport}}
+        value={{reports: state.reports, findAllReports, dispatchReports, deleteReport, createReport}}
         >
             {children}
         </ReportContext.Provider>

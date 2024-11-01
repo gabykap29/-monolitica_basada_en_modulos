@@ -1,8 +1,6 @@
 import iziToast from "izitoast"
 import 'izitoast/dist/css/iziToast.min.css';
 import { fetchStudent } from "../services/StudentService";
-import { useContext } from "react";
-import { AuthContext } from '../../auth/context/AuthContext';
 
 // Función auxiliar para manejar un registro exitoso
 export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {

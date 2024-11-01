@@ -1,8 +1,24 @@
 import { fetchReports } from "../services/ReportService";
 import iziToast from "izitoast";
 
+// Función auxiliar para manejar un registro exitoso
+export const handleCreateReportSuccess = (data, reset, createReport) => {
+
+  createReport(data);
+
+  // Notifica al usuario
+  iziToast.success({
+    title: "Éxito",
+    message: "Reporte creado exitósamente",
+    position: "topRight",
+  });
+
+  // Reinicia formulario y redirige
+  reset();
+};
+
 // Función auxiliar para manejar un error de estudiantes
-export const handleFailure = (message) => {
+export const handleReportFailure = (message) => {
     iziToast.error({
         title: "Error",
         message: message || "Error interno en el servidor",

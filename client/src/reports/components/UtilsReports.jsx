@@ -1,17 +1,37 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import CreateReport from './CreateReport';
 
-const UtilsReports = ({selectedType, handleFilterChange}) => {
+const UtilsReports = ({ selectedType, setSelectedType }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  // Función para filtrar los reportes
+  const handleFilterChange = (e) => {
+    setSelectedType(e.target.value);
+  };
+
+  // Mostrar Form
+  const openForm = () => {
+    setModalOpen(true);
+  };
+
+  // Cerrar Form
+  const closeForm = () => {
+    setModalOpen(false);
+  };
+
   return (
-    <div className="d-flex align-items-center justify-content-between mb-4 p-3 bg-white shadow-lg border-0 rounded-2">
+    <>
+      <div className="d-flex align-items-center justify-content-between mb-4 p-3 bg-white shadow-lg border-0 rounded-2">
         <h4 className="me-3">Reportes</h4>
         <select value={selectedType} onChange={handleFilterChange} className="form-select w-auto">
-            <option value="Todos">Todos</option>
-            <option value="Notificado de faltas">Notificado de faltas</option>
-            <option value="Notificado de estado libre">Notificado de estado libre</option>
+          <option value="Todos">Todos</option>
+          <option value="Notificado de faltas">Notificado de faltas</option>
+          <option value="Notificado de estado libre">Notificado de estado libre</option>
         </select>
-      <Link to={"/IPF/reports/create/"} className="btn btn-primary">Agregar</Link>
-    </div>
+        <button className="btn btn-primary" onClick={openForm}>Agregar</button>
+      </div>
+      <CreateReport isModalOpen={isModalOpen} closeForm={closeForm} />
+    </>
   );
 };
 

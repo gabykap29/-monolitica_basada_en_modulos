@@ -10,6 +10,7 @@ export interface IReport extends Document {
   typeReport: TypeReport;
   date: Date;
   details: string;
+  pdfFilename: string;
   createdAt: Date;
 }
 
@@ -30,6 +31,10 @@ const ReportSchema = new Schema<IReport>({
   },
   details: {
     type: String,
+  },
+  pdfFilename: { 
+    type: String, 
+    required: true, 
   },
 }, {
   timestamps: true,

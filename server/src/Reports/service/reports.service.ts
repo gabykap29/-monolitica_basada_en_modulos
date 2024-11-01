@@ -8,12 +8,13 @@ export class ReportsService {
   public async generateReport(studentId: string, typeReport: TypeReport): Promise<IReport> {
     // Buscar al estudiante en la colección de usuarios
     const student = await User.findOne({ _id: studentId, role: Role.Student });
-    
+
     if (!student) {
       throw new Error('Estudiante no encontrado');
     }
 
     let details = '';
+
     if (typeReport === TypeReport.FreeinMatter) {
       details = `Por medio de la presente, le informamos que, debido al número de inasistencias registradas en el cuatrimestre actual, ha quedado en condición de alumno libre en las materias que corresponden a su plan de estudios. La normativa vigente establece que para mantener la regularidad es necesario cumplir con al menos un 80% de asistencia en cada materia.
 
@@ -25,20 +26,21 @@ Como alumno en condición de "libre", podrá acceder a la instancia de evaluaci�
 
 Es nuestro deber resaltar que el incumplimiento de este criterio afecta su continuidad en el presente cuatrimestre. La institución considera la asistencia una condición esencial no solo para garantizar su progreso académico, sino también para cumplir con los lineamientos que permiten un aprendizaje continuo y efectivo. De este modo, cualquier ausencia adicional que no esté debidamente justificada podría derivar en la pérdida de su regularidad, con el consecuente pase a condición de alumno libre.
 
-Con la presente notificación, y con el compromiso de apoyarlo en el cumplimiento de sus objetivos académicos, le instamos a tomar las medidas pertinentes para evitar incurrir en nuevas inasistencias injustificadas durante el resto del cuatrimestre. Si necesita orientación o si existen circunstancias excepcionales que puedan estar afectando su asistencia, le recomendamos ponerse en contacto con los preceptores de su área o con la oficina de asistencia estudiantil`;
+Con la presente notificación, y con el compromiso de apoyarlo en el cumplimiento de sus objetivos académicos, le instamos a tomar las medidas pertinentes para evitar incurrir en nuevas inasistencias injustificadas durante el resto del cuatrimestre. Si necesita orientación o si existen circunstancias excepcionales que puedan estar afectando su asistencia, le recomendamos ponerse en contacto con los preceptores de su área o con la oficina de asistencia estudiantil.`;
     }
+
+    const pdfFilename = `${student.names} ${student.lastname}_${typeReport}.pdf`;
+
+    await this.createReportPDF(`${student.names} ${student.lastname}`, typeReport, details);
 
     const newReport = new Report({
       student: student._id,
       typeReport,
       details,
+      pdfFilename,
     });
-    
+
     await newReport.save();
-
-    const creationDate = newReport.createdAt;
-
-    this.createReportPDF(`${student.names} ${student.lastname}`, typeReport, details, creationDate);
 
     return newReport.toObject();
   }
@@ -88,19 +90,19 @@ Con la presente notificación, y con el compromiso de apoyarlo en el cumplimient
     };
   }
 
-  private createReportPDF(studentName: string, typeReport: TypeReport, details: string, creationDate: Date) {
+  private async createReportPDF(studentName: string, typeReport: TypeReport, details: string) {
     const doc = new PDFDocument();
     const filePath = path.join(__dirname, `../../Reports/Docs/${studentName}_${typeReport}.pdf`);
 
     if (!fs.existsSync(path.dirname(filePath))) {
-      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
     }
 
     doc.pipe(fs.createWriteStream(filePath));
 
     doc.fontSize(18).text('Reporte de Asistencia', { align: 'center' });
     doc.moveDown();
-    doc.fontSize(13).text(`Fecha: ${creationDate.toLocaleDateString()}`, { align: 'right' });
+    doc.fontSize(13).text(`Fecha: ${new Date().toLocaleDateString()}`, { align: 'right' }); 
     doc.fontSize(13).text(`Alumno/a: ${studentName}`);
     doc.fontSize(13).text(`Tipo de Reporte: ${typeReport}`);
     doc.moveDown();
@@ -109,5 +111,5 @@ Con la presente notificación, y con el compromiso de apoyarlo en el cumplimient
     doc.fontSize(12).text('Queda debidamente notificado de su situación. Sin otro particular, lo/la saludo atentamente.');
 
     doc.end();
-  }
+}
 }

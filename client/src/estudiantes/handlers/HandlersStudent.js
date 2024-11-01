@@ -4,7 +4,7 @@ import { fetchStudent } from "../services/StudentService";
 
 // Función auxiliar para manejar un registro exitoso
 export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
-    createStudent(data);
+    createStudent(data.user);
   
     // Notifica al usuario
     iziToast.success({

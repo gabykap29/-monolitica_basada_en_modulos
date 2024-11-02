@@ -56,10 +56,10 @@ export class AttendanceService {
         }
     }
 
-    public async findAttendancesByUser(token: string) {
+    public async findAttendancesByUser(token: any) {
         try {
 
-            const idUser: = decodeToken(token)
+            const idUser: any = decodeToken(token)
 
             const attendances = await this.AttendanceRepository.findAllByStudent(idUser);
 

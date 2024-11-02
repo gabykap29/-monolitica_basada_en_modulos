@@ -22,7 +22,11 @@ class AuthService {
           'No se encontraron usuarios con las credenciales provistas!',
         );
       }
-      const token = generateToken({ id: user._id, role: user.role });
+      const token = generateToken({
+        id: user._id,
+        role: user.role,
+        username: user.username,
+      });
       const dataUser = {
         nameComplete: `${user.names} ${user.lastname}`,
         username: user.username,

@@ -4,6 +4,7 @@ import { secretJWT } from '../config/config';
 export interface IContentToken {
   id: String;
   role: String;
+  username: String;
 }
 
 export const generateToken = (payload: any) => {
@@ -22,9 +23,13 @@ export const decodeToken = (token: string): IContentToken | boolean => {
     if (!decoded || typeof decoded === 'string') {
       return false;
     }
-    const { id, role } = decoded as jwt.JwtPayload;
-    if (typeof id === 'string' && typeof role === 'string') {
-      return { id, role };
+    const { id, role, username } = decoded as jwt.JwtPayload;
+    if (
+      typeof id === 'string' &&
+      typeof role === 'string' &&
+      typeof username === 'string'
+    ) {
+      return { id, role, username };
     }
     return false;
   } catch (error) {

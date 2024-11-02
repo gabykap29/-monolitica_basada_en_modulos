@@ -86,6 +86,8 @@ export class AttendanceService {
     public async findAttendancesByUserParams(id: string) {
         try {
 
+            console.log(id)
+
             const attendances = await this.AttendanceRepository.findAllByStudent(id);
 
             return attendances

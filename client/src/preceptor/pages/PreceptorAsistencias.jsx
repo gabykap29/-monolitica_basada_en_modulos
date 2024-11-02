@@ -1,4 +1,5 @@
 import { useApiFetch } from '../../common/hooks/apiFetch'
+import { useToggle } from "../../common/hooks/useToggle"
 import { useEffect, useState } from 'react'
 
 import { Calendar, dayjsLocalizer } from "react-big-calendar"
@@ -23,6 +24,8 @@ export const PreceptorCalendar = () => {
     const [date, setDate] = useState([])
     const [view, setView] = useState('month');
 
+    const { handleToggle, toggle } = useToggle()
+
     useEffect(() => {
         (async () => {
 
@@ -43,7 +46,7 @@ export const PreceptorCalendar = () => {
                 setEvents(formatedAttendance);
             }
         })()
-    }, [])
+    }, [toggle])
 
     const dayPropGetter = (date) => {
         const isToday = dayjs().isSame(date, 'day')
@@ -78,13 +81,17 @@ export const PreceptorCalendar = () => {
         }
     }
 
-    const handleUpdate = async (e, idAttendance) => {
+    const handleUpdate = async (e, idAttendance, isPersonal) => {
         e.preventDefault()
 
         const response = await useApiFetch("/attendance", "PUT", null, idAttendance)
 
         if (response.status === 200) {
-            findByDate({ preventDefault: () => { } });
+            if (isPersonal) {
+
+            } else {
+                findByDate({ preventDefault: () => { } });
+            }
         }
     }
 
@@ -143,6 +150,34 @@ export const PreceptorCalendar = () => {
         ),
     }
 
+    const handleAllAttendances = () => {
+        setView('month')
+        handleToggle(!toggle)
+    }
+
+    const handleAttendance = async (e, id) => {
+        e.preventDefault()
+
+        const response = await useApiFetch("/attendances", "GET", "", id)
+
+        if (response.attendances) {
+            const formattedAttendances = response.attendances.map(attendance => ({
+                id: attendance._id,
+                start: dayjs(attendance.createdAt).toDate(),
+                end: dayjs(attendance.createdAt).toDate(),
+                title: attendance.isPresent ? "Presente" : "Ausente",
+                idStudent: attendance.idStudent._id,
+                student: attendance.idStudent.names + " " + attendance.idStudent.lastname
+            }));
+
+            setEvents(formattedAttendances)
+            setView('agenda')
+        }
+
+    }
+
+    console.log(events);
+
     return (
 
         <div className="container-fluid" style={{ height: "100vh" }}>
@@ -163,7 +198,9 @@ export const PreceptorCalendar = () => {
                                 <button type='submit' className='btn btn-primary'>Buscar por fecha</button>
                             </form>
 
-                            <StudentSelector setEvents={setEvents} />
+                            <StudentSelector setEvents={setDay} setView={setView} handleAttendance={handleAttendance} />
+
+                            <button onClick={handleAllAttendances} className='btn btn-primary btn-sm'>Ver todas las asistencias</button>
                         </div>
 
 
@@ -200,7 +237,7 @@ export const PreceptorCalendar = () => {
 
                     </div>
                 </main>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }

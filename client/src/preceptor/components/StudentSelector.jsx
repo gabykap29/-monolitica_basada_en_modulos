@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useApiFetch } from '../../common/hooks/apiFetch'
+import dayjs from 'dayjs'
 
-export const StudentSelector = ({ setEvents }) => {
+export const StudentSelector = ({ setEvents, setView, handleAttendance }) => {
 
     const [students, setStudents] = useState([])
     const [selectedStudent, setSelectedStudent] = useState('');
@@ -20,15 +21,6 @@ export const StudentSelector = ({ setEvents }) => {
         })()
     }, [])
 
-    const handleAttendance = async (e, id) => {
-        e.preventDefault()
-
-        const response = await useApiFetch("/attendances", "GET", "", id)
-
-        console.log(response);
-
-    }
-
     return (
         <form onSubmit={(e) => handleAttendance(e, selectedStudent)}>
             <label className='px-2' htmlFor="studentSelect">Selecciona un estudiante: </label>
@@ -41,7 +33,7 @@ export const StudentSelector = ({ setEvents }) => {
                 ))}
             </select>
 
-            <button type='submit' className='btn btn-primary'>Buscar asistencias del estudiante</button>
+            <button type='submit' className='btn btn-primary'>Buscar las asistencias</button>
         </form>
     )
 }

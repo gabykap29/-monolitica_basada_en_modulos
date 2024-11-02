@@ -22,7 +22,7 @@ export class AttendanceRepository {
 
     async findAllByStudent(idStudent: string): Promise<IAttendance[] | boolean> {
         try {
-            const attendance = await Attendance.find({ idStudent: idStudent })
+            const attendance = await Attendance.find({ idStudent: idStudent }).populate('idStudent', 'names lastname')
 
             console.log(attendance);
 

@@ -10,7 +10,7 @@ import "dayjs/locale/es"
 import { FaCheck } from "react-icons/fa6";
 import { MdOutlineCancel } from "react-icons/md";
 import { MdOutlineDeleteForever } from "react-icons/md";
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaSearch } from "react-icons/fa";
 
 import Sidebar from '../../common/components/Sidebar'
 import Header from '../../common/components/Header'
@@ -23,7 +23,6 @@ export const PreceptorCalendar = () => {
     const [day, setDay] = useState([])
     const [date, setDate] = useState([])
     const [view, setView] = useState('month');
-
     const { handleToggle, toggle } = useToggle()
 
     useEffect(() => {
@@ -48,6 +47,7 @@ export const PreceptorCalendar = () => {
         })()
     }, [toggle])
 
+    // * FUNCIONES DEL CALENDARIO
     const dayPropGetter = (date) => {
         const isToday = dayjs().isSame(date, 'day')
         return isToday ? { style: { backgroundColor: "#38bdf8" } } : {}
@@ -56,53 +56,6 @@ export const PreceptorCalendar = () => {
     const handleSelectSlot = ({ start }) => {
         setDate(start)
         console.log("Fecha seleccionada:", start);
-    }
-
-    const findByDate = async (e) => {
-        e.preventDefault();
-
-        const formattedDate = dayjs(date).format("YYYY-MM-DD");
-
-        const response = await useApiFetch("/attendances", "POST", { date: formattedDate })
-
-        if (response.status === 200) {
-            const attendances = response.attendances.map(attendance => ({
-                id: attendance._id,
-                start: dayjs(attendance.createdAt).toDate(),
-                end: dayjs(attendance.createdAt).toDate(),
-                title: attendance.isPresent ? "Presente" : "Ausente",
-                time: dayjs(attendance.createdAt).toDate(),
-                student: attendance.idStudent.names + " " + attendance.idStudent.lastname
-            }));
-
-            setDay(attendances);
-            setView('agenda');
-            console.log("Eventos actualizados:", attendances);
-        }
-    }
-
-    const handleUpdate = async (e, idAttendance, isPersonal) => {
-        e.preventDefault()
-
-        const response = await useApiFetch("/attendance", "PUT", null, idAttendance)
-
-        if (response.status === 200) {
-            if (isPersonal) {
-
-            } else {
-                findByDate({ preventDefault: () => { } });
-            }
-        }
-    }
-
-    const handleDelete = async (e, idAttendance) => {
-        e.preventDefault()
-
-        const response = await useApiFetch("/attendance", "DELETE", null, idAttendance)
-
-        if (response.status === 200) {
-            findByDate({ preventDefault: () => { } });
-        }
     }
 
     const CustomAgendaEvent = ({ event }) => (
@@ -150,6 +103,49 @@ export const PreceptorCalendar = () => {
         ),
     }
 
+    // * FUNCIONES DE ASISTENCIA
+    const findByDate = async (e) => {
+        e.preventDefault();
+
+        const formattedDate = dayjs(date).format("YYYY-MM-DD");
+
+        const response = await useApiFetch("/attendances", "POST", { date: formattedDate })
+
+        if (response.status === 200) {
+            const attendances = response.attendances.map(attendance => ({
+                id: attendance._id,
+                start: dayjs(attendance.createdAt).toDate(),
+                end: dayjs(attendance.createdAt).toDate(),
+                title: attendance.isPresent ? "Presente" : "Ausente",
+                time: dayjs(attendance.createdAt).toDate(),
+                student: attendance.idStudent.names + " " + attendance.idStudent.lastname
+            }));
+
+            setDay(attendances);
+            setView('agenda');
+        }
+    }
+
+    const handleUpdate = async (e, idAttendance) => {
+        e.preventDefault()
+
+        const response = await useApiFetch("/attendance", "PUT", null, idAttendance)
+
+        if (response.status === 200) {
+            findByDate({ preventDefault: () => { } });
+        }
+    }
+
+    const handleDelete = async (e, idAttendance) => {
+        e.preventDefault()
+
+        const response = await useApiFetch("/attendance", "DELETE", null, idAttendance)
+
+        if (response.status === 200) {
+            findByDate({ preventDefault: () => { } });
+        }
+    }
+
     const handleAllAttendances = () => {
         setView('month')
         handleToggle(!toggle)
@@ -171,9 +167,9 @@ export const PreceptorCalendar = () => {
             }));
 
             setEvents(formattedAttendances)
+            setDay(formattedAttendances)
             setView('agenda')
         }
-
     }
 
     console.log(events);
@@ -192,15 +188,17 @@ export const PreceptorCalendar = () => {
                     <div className="container mt-4 p-4">
 
                         {/* // !ACCIONES */}
-                        <div className='pb-2 d-flex'>
+                        <div className='pb-2 d-flex align-items-center justify-content-center'>
                             <form onSubmit={findByDate}>
                                 <input type="text" placeholder='haga click en una fecha' value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
-                                <button type='submit' className='btn btn-primary'>Buscar por fecha</button>
+                                <button type='submit' className='btn btn-primary'><FaSearch /></button>
                             </form>
 
-                            <StudentSelector setEvents={setDay} setView={setView} handleAttendance={handleAttendance} />
+                            <StudentSelector handleAttendance={handleAttendance} />
 
-                            <button onClick={handleAllAttendances} className='btn btn-primary btn-sm'>Ver todas las asistencias</button>
+                            <dir>
+                                <button onClick={handleAllAttendances} className='btn btn-primary btn-sm'>Ver todas las asistencias</button>
+                            </dir>
                         </div>
 
 

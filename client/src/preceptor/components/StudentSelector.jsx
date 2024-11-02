@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useApiFetch } from '../../common/hooks/apiFetch'
-import dayjs from 'dayjs'
+import { FaSearch } from 'react-icons/fa'
 
-export const StudentSelector = ({ setEvents, setView, handleAttendance }) => {
+export const StudentSelector = ({ handleAttendance }) => {
 
     const [students, setStudents] = useState([])
     const [selectedStudent, setSelectedStudent] = useState('');
@@ -33,7 +33,7 @@ export const StudentSelector = ({ setEvents, setView, handleAttendance }) => {
                 ))}
             </select>
 
-            <button type='submit' className='btn btn-primary'>Buscar las asistencias</button>
+            <button type='submit' className='btn btn-primary'><FaSearch /></button>
         </form>
     )
 }

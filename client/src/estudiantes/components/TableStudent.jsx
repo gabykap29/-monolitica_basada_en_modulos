@@ -25,9 +25,10 @@ const TableStudent = () => {
   };
 
   // Filtrar estudiantes por DNI
-  const filteredStudents = students.filter(student => 
+  const filteredStudents = students && Array.isArray(students) ? students.filter(student => 
     String(student.dni || '').includes(filterDNI)
-  );
+  ) : [];
+  
 
   return (
     <>

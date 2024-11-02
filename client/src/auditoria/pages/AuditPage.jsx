@@ -1,31 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import Sidebar from '../../common/components/Sidebar';
 import Header from '../../common/components/Header';
 import AuditFilter from '../components/AuditFilter';
 import AuditList from '../components/AuditList';
-import { fetchLogs } from '../services/AuditsService';
+import { AuditContext } from '../context/AuditsContext';
 
 export const AuditPage = () => {
-  const [logs, setLogs] = useState([]);
-  const [filteredLogs, setFilteredLogs] = useState([]);
-
-  // Llama a la API para obtener los logs al cargar el componente
-  useEffect(() => {
-    const fecthAllAudits = async () => {
-      try {
-        const data = await fetchLogs("logs/combined", "GET")
-        if (!data.ok) {
-          setLogs(data.logs);
-          setFilteredLogs(data.logs);
-        } else {
-          console.error('Error al obtener los logs:', data);
-        }
-      } catch (error) {
-        
-      }
-    }
-    fecthAllAudits()
-  }, []);
+  const {logs, setLogs, filteredLogs, setFilteredLogs} = useContext(AuditContext)
 
   // Filtra los logs según usuario, estado y método seleccionados
   const handleFilter = (filters) => {

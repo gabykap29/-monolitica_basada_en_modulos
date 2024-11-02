@@ -21,7 +21,7 @@ export const StudentProvider = ({ children }) => {
   // Carga los estudiantes cuando se carga el componente
   useEffect(() => {
     const fetchUsers = async () => {
-      const data = await fetchStudent("/users/student", "GET", null);
+      const data = await fetchStudent("users/student", "GET", null);
       findAllStudents(data.users)
     };
     fetchUsers();

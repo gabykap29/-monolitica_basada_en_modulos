@@ -1,43 +1,44 @@
-import React, { useEffect, useState } from 'react'
-import Sidebar from '../../common/components/Sidebar'
-import Header from '../../common/components/Header'
-import AuditFilter from '../components/AuditFilter'
+import React, { useEffect, useState } from 'react';
+import Sidebar from '../../common/components/Sidebar';
+import Header from '../../common/components/Header';
+import AuditFilter from '../components/AuditFilter';
 import AuditList from '../components/AuditList';
+import { fetchLogs } from '../services/AuditsService';
 
 export const AuditPage = () => {
-
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
 
   // Llama a la API para obtener los logs al cargar el componente
   useEffect(() => {
-    fetch('http://localhost:4000/api/logs/combined')
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 200) {
+    const fecthAllAudits = async () => {
+      try {
+        const data = await fetchLogs("logs/combined", "GET")
+        if (!data.ok) {
           setLogs(data.logs);
           setFilteredLogs(data.logs);
         } else {
           console.error('Error al obtener los logs:', data);
         }
-      })
-      .catch(error => console.error('Error en la conexión:', error));
+      } catch (error) {
+        
+      }
+    }
+    fecthAllAudits()
   }, []);
 
-  // Filtra los logs según el nivel y las fechas seleccionadas
+  // Filtra los logs según usuario, estado y método seleccionados
   const handleFilter = (filters) => {
-    const { level, startDate, endDate } = filters;
+    const { usuario, estado, metodo } = filters;
     const filtered = logs.filter(log => {
-      const logDate = new Date(log.timestamp);
       return (
-        (!level || log.level === level) &&
-        (!startDate || logDate >= new Date(startDate)) &&
-        (!endDate || logDate <= new Date(endDate))
+        (!usuario || log.message.usuario === usuario) &&
+        (!estado || log.message.estado === parseInt(estado)) &&
+        (!metodo || log.message.metodo === metodo)
       );
     });
     setFilteredLogs(filtered);
   };
-
 
   return (
     <>
@@ -52,12 +53,12 @@ export const AuditPage = () => {
           <main className="col-md-9 col-lg-10 px-0" style={{ overflowY: "auto", height: "100%", backgroundColor: "#f0f0f0" }}>
             <Header />
             <div className="container mt-4 p-4">
-                <AuditFilter onFilter={handleFilter} />
-                <AuditList logs={filteredLogs} />
+              <AuditFilter onFilter={handleFilter} />
+              <AuditList logs={filteredLogs} />
             </div>
           </main>
         </div>
       </div>
     </>
-  )
-}
+  );
+};

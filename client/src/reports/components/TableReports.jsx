@@ -6,6 +6,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import { handleDeleteReport } from "../handlers/HandlersReports";
 import UtilsReports from "./UtilsReports";
 import { GraficoReports } from "./GraficoReports";
+import { env } from "../../common/config/config";
 
 
 const CardReports = () => {
@@ -14,7 +15,7 @@ const CardReports = () => {
 
   useEffect(() => {
     const fetchReportsData = async () => {
-      const data = await fetchReports("/reports", "GET", null);
+      const data = await fetchReports("reports", "GET", null);
       findAllReports(data);
     };
     fetchReportsData();
@@ -22,7 +23,7 @@ const CardReports = () => {
 
   const BuscarPdf = (filename) => {
     const encodedFilename = encodeURIComponent(filename);
-    const url = `http://localhost:4000/api/pdf-reports/${encodedFilename}`;
+    const url = `${env.SERVER_PATH}pdf-reports/${encodedFilename}`;
     // Usar window.open para abrir la URL en una nueva pestaña
     window.open(url, "_blank");
   };

@@ -105,7 +105,7 @@ export class AttendanceController {
     getAllAttendancesByUser = async (req: Request, res: Response): Promise<void> => {
         try {
 
-            const attendances = await this.AttendanceService.findAttendancesByUser(req.params.id);
+            const attendances = await this.AttendanceService.findAttendancesByUser(req.headers.authorization);
 
             res.status(200).json({
                 status: 200,

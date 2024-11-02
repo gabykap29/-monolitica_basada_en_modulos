@@ -27,8 +27,6 @@ export const useApiFetch = async (route, method, payload, param) => {
 
             const data = await response.json();
 
-            console.log(data);
-
             return data
 
         } catch (error) {

@@ -66,18 +66,10 @@ export const PreceptorCalendar = () => {
 
         const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
-        const response = await fetch("http://localhost:4000/api/attendances", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ date: formattedDate }),
-        });
+        const response = await useApiFetch("/attendances", "POST", {date: formattedDate})
 
-        const data = await response.json();
-
-        if (data.status === 200) {
-            const attendances = data.attendances.map(attendance => ({
+        if (response.status === 200) {
+            const attendances = response.attendances.map(attendance => ({
                 id: attendance._id,
                 start: dayjs(attendance.createdAt).toDate(),
                 end: dayjs(attendance.createdAt).toDate(),

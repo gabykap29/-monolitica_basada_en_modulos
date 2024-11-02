@@ -11,7 +11,7 @@ export const useApiFetch = async (route, method, payload, param) => {
     };
 
     if (url.includes("/auth/") || url.includes("/api/")) {
-        headers["Authorization"] = `Bearer ${token}`;
+        headers["Authorization"] = `${token}`;
     }
 
     const paramUrl = param && url + "/" + param
@@ -52,10 +52,10 @@ export const useApiFetch = async (route, method, payload, param) => {
             console.error("Error al realizar la petición", error);
         }
 
-    } else if (method !== "GET") {
+    } else if (method === "POST") {
         try {
 
-            const response = await fetch(param ? paramUrl : url, {
+            const response = await fetch(url, {
                 method: method,
                 headers: headers,
                 body: JSON.stringify(payload),

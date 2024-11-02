@@ -11,12 +11,22 @@ export class AttendanceService {
 
     private AttendanceRepository: AttendanceRepository = new AttendanceRepository();
 
-    public async markAttendance(attendanceData: { idStudent: string, isPresent: boolean }): Promise<IAttendance> {
+    public async markAttendance(attendanceData: { idStudent: string, isPresent: boolean }, token: string | undefined): Promise<IAttendance> {
         try {
+            if (token && token !== "") {
+                const idUser: any = decodeToken(token)
 
-            const attendance = await this.AttendanceRepository.create(attendanceData);
+                console.log(idUser);
+                console.log(token);
 
-            return attendance;
+
+                const attendance = await this.AttendanceRepository.create({ idStudent: idUser.id, isPresent: attendanceData.isPresent });
+                return attendance;
+            } else {
+                const attendance = await this.AttendanceRepository.create({ idStudent: attendanceData.idStudent, isPresent: attendanceData.isPresent });
+                return attendance;
+            }
+
 
         } catch (error) {
             console.log(error);
@@ -61,7 +71,7 @@ export class AttendanceService {
 
             const idUser: any = decodeToken(token)
 
-            const attendances = await this.AttendanceRepository.findAllByStudent(idUser);
+            const attendances = await this.AttendanceRepository.findAllByStudent(idUser.id);
 
             return attendances
 
@@ -154,7 +164,7 @@ export class AttendanceService {
                 });
 
                 absentStudents.forEach(absent => {
-                    this.markAttendance({ idStudent: String(absent._id), isPresent: false })
+                    this.markAttendance({ idStudent: String(absent._id), isPresent: false }, "")
                 })
 
                 console.log('Registro de ausentes completado')

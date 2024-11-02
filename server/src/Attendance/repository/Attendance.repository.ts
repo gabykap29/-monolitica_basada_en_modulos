@@ -32,6 +32,7 @@ export class AttendanceRepository {
             return attendance
 
         } catch (error) {
+            console.log(error);
             throw new Error("Error al buscar las asistencias del estudiante");
         }
     }
@@ -41,9 +42,6 @@ export class AttendanceRepository {
 
             // Busca asistencias dentro del rango de fechas
             const attendance = await Attendance.find().populate('idStudent', 'names lastname');
-
-            console.log("REPO");
-            console.log(attendance);
 
             // Verifica si se encontraron resultados
             if (!attendance || attendance.length === 0) {
@@ -83,6 +81,9 @@ export class AttendanceRepository {
     async create(attendance: { idStudent: string, isPresent: boolean }): Promise<IAttendance> {
         try {
             const newAttendance: IAttendance = await Attendance.create(attendance)
+
+            console.log(newAttendance);
+
 
             return newAttendance
 

@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/attendance/:attendance", attendanceController.getAttendanceById);
 
-router.get("/attendances/:id", AllowRequest.isAllowed, attendanceController.getAllAttendancesByUser);
+router.get("/attendances", AllowRequest.isAllowed, attendanceController.getAllAttendancesByUser);
 
 router.get("/attendancesMonth/:month", AllowRequest.isAllowed, attendanceController.getAttendancesByMonth);
 
@@ -16,7 +16,7 @@ router.post("/attendance", attendanceController.createAttendance);
 
 router.post("/absent", AllowRequest.isAllowed, attendanceController.createAbsent);
 
-router.post("/attendances/", AllowRequest.isAllowed, AllowRequest.whereRequest, attendanceController.getAttendancesByDate);
+router.post("/attendances", AllowRequest.isAllowed, attendanceController.getAttendancesByDate);
 
 router.delete("/attendance/:id", AllowRequest.isAllowed, attendanceController.deleteAttendance);
 

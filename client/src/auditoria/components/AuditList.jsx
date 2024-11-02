@@ -3,9 +3,8 @@ import React from 'react';
 const AuditList = ({ logs }) => {
   return (
     <div className="container my-4">
-      <h2 className="text-center mb-4">Audit Logs</h2>
-      <table className="table table-hover table-bordered text-center bg-dark">
-        <thead className="thead-dark">
+      <table className="table table-hover bg-white rounded-2 shadow-lg text-center">
+        <thead className="table-dark">
           <tr>
             <th scope="col">Nivel</th>
             <th scope="col">Cliente</th>

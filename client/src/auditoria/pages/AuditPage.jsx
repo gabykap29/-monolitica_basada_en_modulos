@@ -6,7 +6,7 @@ import AuditList from '../components/AuditList';
 import { AuditContext } from '../context/AuditsContext';
 
 export const AuditPage = () => {
-  const {logs, setLogs, filteredLogs, setFilteredLogs} = useContext(AuditContext)
+  const {logs, filteredLogs, setFilteredLogs} = useContext(AuditContext)
 
   // Filtra los logs según usuario, estado y método seleccionados
   const handleFilter = (filters) => {
@@ -34,6 +34,7 @@ export const AuditPage = () => {
           <main className="col-md-9 col-lg-10 px-0" style={{ overflowY: "auto", height: "100%", backgroundColor: "#f0f0f0" }}>
             <Header />
             <div className="container mt-4 p-4">
+              <h3 className="mb-4">Auditoría</h3>
               <AuditFilter onFilter={handleFilter} />
               <AuditList logs={filteredLogs} />
             </div>

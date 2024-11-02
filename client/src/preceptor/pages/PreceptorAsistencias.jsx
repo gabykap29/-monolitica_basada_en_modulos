@@ -57,8 +57,8 @@ export const PreceptorCalendar = () => {
     }
 
     const handleSelectSlot = ({ start }) => {
-        setDate(start) 
-        console.log("Fecha seleccionada:", start); 
+        setDate(start)
+        console.log("Fecha seleccionada:", start);
     }
 
     const findByDate = async (e) => {
@@ -78,6 +78,7 @@ export const PreceptorCalendar = () => {
 
         if (data.status === 200) {
             const attendances = data.attendances.map(attendance => ({
+                id: attendance._id,
                 start: dayjs(attendance.createdAt).toDate(),
                 end: dayjs(attendance.createdAt).toDate(),
                 title: attendance.isPresent ? "Presente" : "Ausente",
@@ -91,25 +92,55 @@ export const PreceptorCalendar = () => {
         }
     }
 
+    const handleUpdate = async (e, idAttendance) => {
+        e.preventDefault()
+
+        const response = await useApiFetch("/attendance", "PUT", null, idAttendance)
+
+        if (response.status === 200) {
+            findByDate({ preventDefault: () => { } });
+        }
+    }
+
+    const handleDelete = async (e, idAttendance) => {
+        e.preventDefault()
+
+        const response = await useApiFetch("/attendance", "DELETE", null, idAttendance)
+
+        if (response.status === 200) {
+            findByDate({ preventDefault: () => { } });
+        }
+    }
+
     const CustomAgendaEvent = ({ event }) => (
         <div className='d-flex gap-3'>
-            <div className={`${event.title === "Student" ? "bg-succcess" : "bg-danger"} rounded px-1`} >
+            <div className={`${event.title === "Presente" ? "bg-success" : "bg-danger"} rounded px-1`} >
                 <i className='text-white px-2'>
                     {event.title === "Presente" ? <FaCheck /> : <MdOutlineCancel />}
                 </i>
 
-                <span className={`${event.title === "Student" ? "bg-succcess" : "bg-danger"} rounded text-white pe-3`}>
+                <span className={`text-white pe-3`}>
                     {`${event.title}`}</span>
             </div>
 
             <div className='d-flex gap-2 ms-auto'>
-                <i className='text-white px-2 bg-warning rounded'>
-                    {<FaRegEdit size={20} />}
-                </i>
 
-                <i className='text-white px-2 bg-danger rounded'>
-                    {< MdOutlineDeleteForever size={22} />}
-                </i>
+                <form onSubmit={(e) => handleUpdate(e, event.id)}>
+                    <button title='Cambiar asistencia' type='submit' className='text-white px-2 bg-warning rounded border-white'>
+                        <i>
+                            {<FaRegEdit size={20} />}
+                        </i>
+                    </button>
+                </form>
+
+                <form onSubmit={(e) => handleDelete(e, event.id)}>
+                    <button title='Eliminar asistencia' type='submit' className='text-white px-2 bg-danger rounded border-white'>
+                        <i>
+                            {< MdOutlineDeleteForever size={22} />}
+                        </i>
+                    </button>
+                </form>
+
             </div>
         </div>
     );
@@ -164,8 +195,8 @@ export const PreceptorCalendar = () => {
                             }}
                             dayPropGetter={dayPropGetter}
                             onSelectSlot={handleSelectSlot}
-                            selectable // Permite la selección de días
-                            view={view} // Usar el estado de la vista
+                            selectable
+                            view={view}
                             onView={setView}
                             messages={{
                                 previous: 'Anterior',

@@ -38,7 +38,7 @@ export class AttendanceRepository {
 
     async findAllAgrupedByDate(month: string): Promise<IAttendance[] | boolean> {
         try {
-       
+
             // Busca asistencias dentro del rango de fechas
             const attendance = await Attendance.find().populate('idStudent', 'names lastname');
 
@@ -93,21 +93,21 @@ export class AttendanceRepository {
         }
     }
 
-    async update(attendance: { idAttendance: string, isPresent: boolean }): Promise<boolean> {
+    async update(idAttendance: string): Promise<boolean> {
         try {
 
-            console.log(attendance);
+            const oldAttendance = await this.findId(idAttendance)
 
+            if (typeof oldAttendance !== "boolean") {
 
-            const updatedAttendance: IAttendance | null = await Attendance.findByIdAndUpdate(attendance.idAttendance,
-                { isPresent: attendance.isPresent },
-                { new: true })
+                const updatedAttendance: IAttendance | null = await Attendance.findByIdAndUpdate(idAttendance,
+                    { isPresent: !oldAttendance.isPresent },
+                    { new: true })
 
-
-            console.log(updatedAttendance);
-
-
-            return updatedAttendance ? true : false
+                return updatedAttendance ? true : false
+            } else {
+                return false
+            }
 
         } catch (error) {
             console.log(error);

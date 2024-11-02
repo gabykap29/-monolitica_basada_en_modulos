@@ -116,9 +116,9 @@ export class AttendanceService {
         }
     }
 
-    public async updateAttendance({ idAttendance, isPresent }: { idAttendance: string; isPresent: boolean }): Promise<boolean> {
+    public async updateAttendance(idAttendance: string): Promise<boolean> {
         try {
-            const attendances = await this.AttendanceRepository.update({ idAttendance, isPresent })
+            const attendances = await this.AttendanceRepository.update(idAttendance)
 
             return attendances
 

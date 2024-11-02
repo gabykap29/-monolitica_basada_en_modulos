@@ -11,7 +11,7 @@ import Sidebar from '../../common/components/Sidebar'
 import Header from '../../common/components/Header'
 import { useApiFetch } from '../../common/hooks/apiFetch'
 
-export const PreceptorCalendar = () => {
+export const StudentCalendar = () => {
     dayjs.locale("es")
     const localizer = dayjsLocalizer(dayjs)
     const [events, setEvents] = useState([])

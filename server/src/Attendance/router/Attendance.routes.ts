@@ -20,6 +20,6 @@ router.post("/attendances/", AllowRequest.isAllowed, AllowRequest.whereRequest, 
 
 router.delete("/attendance/:id", AllowRequest.isAllowed, attendanceController.deleteAttendance);
 
-router.put("/attendance", AllowRequest.isAllowed, attendanceController.updateAttendance);
+router.put("/attendance/:id", AllowRequest.isAllowed, attendanceController.updateAttendance);
 
 export default router;

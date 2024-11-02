@@ -124,7 +124,7 @@ export class AttendanceController {
     updateAttendance = async (req: Request, res: Response): Promise<void> => {
         try {
 
-            const attendance = await this.AttendanceService.updateAttendance(req.body);
+            const attendance = await this.AttendanceService.updateAttendance(req.params.id);
 
             res.status(200).json({
                 status: 200,

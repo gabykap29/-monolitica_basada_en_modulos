@@ -5,37 +5,42 @@ import dayjs from "dayjs"
 import "dayjs/locale/es"
 import { FaCheck } from "react-icons/fa6";
 import { MdOutlineCancel } from "react-icons/md";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
 import Sidebar from '../../common/components/Sidebar'
 import Header from '../../common/components/Header'
 import { useApiFetch } from '../../common/hooks/apiFetch'
 
-export const StudentCalendar = () => {
+export const PreceptorCalendar = () => {
     dayjs.locale("es")
     const localizer = dayjsLocalizer(dayjs)
     const [events, setEvents] = useState([])
     const [attendance, setAttendance] = useState(null)
-    const [date, setDate] = useState(null)
+    const [day, setDay] = useState([])
+    const [date, setDate] = useState([])
     const [view, setView] = useState('month');
-
 
     useEffect(() => {
         (async () => {
-            const response = await useApiFetch("/attendances", "GET", "", "671fa1df22b4b21baf289d93")
 
+            const month = dayjs().format("YYYY-MM")
+            const response = await useApiFetch("/attendancesMonth", "GET", "", month)
 
-            // await fetch("http://localhost:4000/api/attendances/671fa1df22b4b21baf289d93")
-            // const data = await response.json()
+            console.log(response)
 
-            const formattedData = response?.attendances?.map((attendance) => ({
-                id: attendance._id,
-                start: dayjs(attendance.createdAt).toDate(),
-                end: dayjs(attendance.createdAt).toDate(),
-                title: attendance.isPresent ? "Presente" : "Ausente",
-                idStudent: attendance.idStudent,
-            }))
+            if (response.status === 200) {
 
+                const formatedAttendance = response?.attendances?.map((attendance) => ({
+                    id: attendance.id,
+                    idStudent: attendance.idStudent._id,
+                    student: attendance.idStudent.names + " " + attendance.idStudent.lastname,
+                    start: new Date(attendance.end),
+                    end: new Date(attendance.end),
+                    title: attendance.title ? "Presente" : "Ausente"
+                }));
 
-            setEvents(formattedData)
+                setEvents(formatedAttendance);
+            }
         })()
     }, [])
 
@@ -43,67 +48,43 @@ export const StudentCalendar = () => {
         console.log("Eventos actuales:", events);
     }, [events]);
 
-    const CustomToolbar = (toolbar) => {
-        const goToBack = () => {
-            toolbar.onNavigate('PREV');
-        };
-
-        const goToNext = () => {
-            toolbar.onNavigate('NEXT');
-        };
-
-        const goToCurrent = () => {
-            toolbar.onNavigate('TODAY');
-        };
-
-        return (
-            <div>
-                <button onClick={goToBack}>Anterior</button>
-                <button onClick={goToNext}>Siguiente</button>
-                <button onClick={goToCurrent}>Hoy</button>
-                {/* Puedes agregar más botones aquí si lo deseas */}
-            </div>
-        );
-    };
-
     const components = {
         event: ({ event }) => (
-            <div style={{ backgroundColor: (event.title === "Presente" ? "green" : "red") }}>
+            <div className={`bg-danger border border-white`} >
                 {event.title === "Presente" ? <FaCheck /> : <MdOutlineCancel />}
                 {event.title}
-            </div>
+            </div >
         ),
-        // toolbar: CustomToolbar
     }
 
-    const payload = {
-        idStudent: "671fa1df22b4b21baf289d93",
-        isPresent: true
-    }
+    // const payload = {
+    //     idStudent: "671fa1df22b4b21baf289d93",
+    //     isPresent: true
+    // }
 
     const dayPropGetter = (date) => {
         const isToday = dayjs().isSame(date, 'day')
-        return isToday ? { style: { backgroundColor: 'blue' } } : {}
+        return isToday ? { style: { backgroundColor: "#38bdf8" } } : {}
     }
 
-    const markAttendance = async (e) => {
-        e.preventDefault()
+    // const markAttendance = async (e) => {
+    //     e.preventDefault()
 
-        setAttendance(payload)
+    //     setAttendance(payload)
 
-        const response = await fetch("http://localhost:4000/api/attendance", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload), // Asegúrate de incluir la fecha
-        })
+    //     const response = await fetch("http://localhost:4000/api/attendance", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(payload),
+    //     })
 
-        const data = await response.json()
+    //     const data = await response.json()
 
-        alert(JSON.stringify(data))
-        window.location.reload()
-    }
+    //     alert(JSON.stringify(data))
+    //     window.location.reload()
+    // }
 
     const handleSelectSlot = ({ start }) => {
         setDate(start) // Guarda la fecha de inicio seleccionada en el estado
@@ -128,15 +109,44 @@ export const StudentCalendar = () => {
         if (data.status === 200) {
             const attendances = data.attendances.map(attendance => ({
                 start: dayjs(attendance.createdAt).toDate(), // Fecha de inicio
-                end: dayjs(attendance.createdAt).toDate(), // Fecha de fin (un día después)
-                title: attendance.isPresent ? "Presente" : "Ausente"
+                end: dayjs(attendance.createdAt).toDate(), // Fecha de fin
+                title: attendance.isPresent ? "Presente" : "Ausente",
+                time: dayjs(attendance.createdAt).toDate(),
+                student: attendance.idStudent.names + " " + attendance.idStudent.lastname // Añadir nombre completo del estudiante
             }));
 
-            setEvents(attendances); // Actualiza el estado de los eventos
+            setDay(attendances); // Actualiza el estado de los eventos
             setView('agenda'); // Cambia a la vista de agenda
             console.log("Eventos actualizados:", attendances); // Verifica los eventos
         }
     }
+
+    const CustomAgendaEvent = ({ event }) => (
+        <div className='d-flex gap-3'>
+            <div className={`${event.title === "Student" ? "bg-succcess" : "bg-danger"} rounded px-1`} >
+                <i className='text-white px-2'>
+                    {event.title === "Presente" ? <FaCheck /> : <MdOutlineCancel />}
+                </i>
+
+                <span className={`${event.title === "Student" ? "bg-succcess" : "bg-danger"} rounded text-white pe-3`}>
+                    {`${event.title}`}</span>
+            </div>
+
+            <div className='d-flex gap-2 ms-auto'>
+                <i className='text-white px-2 bg-warning rounded'>
+                    {<FaRegEdit size={20} />}
+                </i>
+
+                <i className='text-white px-2 bg-danger rounded'>
+                    {< MdOutlineDeleteForever size={22} />}
+                </i>
+            </div>
+        </div>
+    );
+
+    const CustomAgendaTime = ({ event }) => (
+        <span>{event.student}</span> // Texto personalizado para la columna "Time"
+    );
 
     return (
 
@@ -151,6 +161,18 @@ export const StudentCalendar = () => {
                     <Header />
                     <div className="container mt-4 p-4">
 
+                        {/* // !ACCIONES */}
+                        <div className='pb-2'>
+                            {/*    <form onSubmit={markAttendance}>
+                                <button type='submit'>Marcar asistencia</button>
+                            </form> */}
+
+                            <form onSubmit={findByDate}>
+                                <input type="text" placeholder='haga click en una fecha' value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
+                                <button type='submit' className='btn btn-primary'>Buscar por fecha</button>
+                            </form>
+                        </div>
+
                         <Calendar
                             localizer={localizer}
                             style={{
@@ -159,8 +181,12 @@ export const StudentCalendar = () => {
                             }}
                             views={["month", 'agenda']}
                             defaultView='month'
-                            events={events}
-                            components={components}
+                            events={view === "month" ? events : day}
+                            components={{
+                                agenda: { event: CustomAgendaEvent },
+                                time: CustomAgendaTime,
+                                month: components
+                            }}
                             dayPropGetter={dayPropGetter}
                             onSelectSlot={handleSelectSlot}
                             selectable // Permite la selección de días
@@ -171,21 +197,12 @@ export const StudentCalendar = () => {
                                 next: 'Siguiente',
                                 today: 'Hoy',
                                 month: "Mes",
-                                agenda: "Lista"
+                                agenda: "Lista",
+                                time: "Alumno",
+                                date: "Fecha",
+                                event: "Asistencia"
                             }}
                         />
-
-                        {/* // !ACCIONES */}
-                        <div>
-                            <form onSubmit={markAttendance}>
-                                <button type='submit'>Marcar asistencia</button>
-                            </form>
-
-                            <form onSubmit={findByDate}>
-                                <input type="text" value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
-                                <button type='submit'>Buscar por fecha</button>
-                            </form>
-                        </div>
 
                     </div>
                 </main>

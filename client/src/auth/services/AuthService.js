@@ -4,7 +4,7 @@ export const fetchAuth = async (route, method, payload) => {
     
     const apiRoute = import.meta.env.VITE_API_SERVER
     
-    const URL = `${apiRoute}/api/${route}`;
+    const URL = `${apiRoute}/${route}`;
 
     const options = {
         method,

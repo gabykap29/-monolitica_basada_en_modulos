@@ -74,6 +74,7 @@ export class AttendanceService {
     }
 
     public async findAttendancesGroupedByDate(month: string) {
+
         try {
             const attendances = await this.AttendanceRepository.findAllAgrupedByDate(month);
 

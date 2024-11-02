@@ -8,6 +8,7 @@ import { EstudianteRoutes } from '../estudiantes/routes/EstudianteRoutes';
 import DashboardRoutes from './DashboardRoutes';
 import { ReportsRoutes } from '../reports/routes/ReportsRoutes';
 import { AuditsRoutes } from '../auditoria/routes/AuditRoutes';
+import NotFoundPage from '../common/pages/NotFoundPage';
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,9 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
+
+        {/* Ruta para páginas no encontradas */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )

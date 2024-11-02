@@ -66,7 +66,7 @@ const EditFormStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const updatedStudent = await fetchStudent(`/users/${id}`, "PUT", form);
+      const updatedStudent = await fetchStudent(`users/${id}`, "PUT", form);
       if (updatedStudent) {
         handleEditSuccess(updatedStudent, navigate, updateStudent);
       } else {

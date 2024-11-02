@@ -8,7 +8,6 @@ const AuditList = ({ logs }) => {
           <tr>
             <th scope="col">Nivel</th>
             <th scope="col">Cliente</th>
-            <th scope="col">Usuario</th>
             <th scope="col">Servicio</th>
             <th scope="col">Estado</th>
             <th scope="col">Método</th>
@@ -20,7 +19,6 @@ const AuditList = ({ logs }) => {
             <tr key={index} className={log.level === 'Error' ? 'table-danger' : ''}>
               <td>{log.level}</td>
               <td>{log.message.cliente}</td>
-              <td>{log.message.usuario}</td>
               <td>{log.service}</td>
               <td>{log.message.estado}</td>
               <td>{log.message.metodo}</td>

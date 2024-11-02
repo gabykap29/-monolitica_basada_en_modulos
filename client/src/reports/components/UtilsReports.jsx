@@ -21,7 +21,7 @@ const UtilsReports = ({ selectedType, setSelectedType }) => {
 
   return (
     <>
-      <div className="d-flex align-items-center justify-content-between mb-4 p-3 bg-white shadow-lg border-0 rounded-2">
+      <div className="d-flex align-items-center justify-content-between mb-4 p-3 bg-white shadow-lg border-0 rounded-2" style={{width: "100%"}}>
         <h4 className="me-3">Reportes</h4>
         <select value={selectedType} onChange={handleFilterChange} className="form-select w-auto">
           <option value="Todos">Todos</option>

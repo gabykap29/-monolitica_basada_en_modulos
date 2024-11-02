@@ -1,6 +1,9 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { reportReducer } from "../reducer/ReportsReducers";
 import { typeAction } from "../../common/types/type";
+import { fetchReports } from "../services/ReportService";
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 export const ReportContext = createContext()
 
@@ -16,6 +19,24 @@ export const ReportProvider = ({children}) => {
             console.error("Error al traer los reportes. Inténtalo de nuevo.", error);
         }
     }
+
+    useEffect(() => {
+      const fetchReportsData = async () => {
+        try {
+          const data = await fetchReports("reports", "GET", null);
+          findAllReports(data);
+        } catch (error) {
+          console.error('Error al obtener los reportes:', error);
+          iziToast.error({
+            title: 'Error',
+            message: 'Error al cargar los reportes',
+            position: 'topRight',
+          });
+        }
+      };
+      fetchReportsData();
+    }, []);
+  
 
     const createReport = (data) => {
         try {

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StudentContext } from '../../estudiantes/context/StudentContext';
 import { fetchReports } from '../services/ReportService';
 import { ReportContext } from '../context/ReportContext';
@@ -9,8 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const CreateReport = ({ isModalOpen, closeForm }) => {
 
   const {students} = useContext(StudentContext)
-  const { createReport } = useContext(ReportContext)
-  const navigate = useNavigate()
+  const { findAllReports } = useContext(ReportContext)
 
   const { form, handleInputChange, reset } = useForm({
     studentId: "",
@@ -19,33 +18,30 @@ const CreateReport = ({ isModalOpen, closeForm }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-
-        // Encuentra el estudiante correspondiente al studentId
-        const student = students.find(s => s._id === form.studentId);
-
-        // Crea un nuevo reporte con los datos del estudiante
-        const newReport = {
-            ...form,
-            date: new Date().toISOString(), 
-            student: {
-                names: student?.names,
-                lastname: student?.lastname
-            }
-        };
-
         const createdReport = await fetchReports("reports/", "POST", form)
         if(createdReport) {
-            handleCreateReportSuccess(newReport, reset, createReport)
+            handleCreateReportSuccess(reset)
+            const fetchReportsData = async () => {
+                try {
+                  const data = await fetchReports("reports", "GET", null);
+                  findAllReports(data);
+                } catch (error) {
+                  console.error('Error al obtener los reportes:', error);
+                  iziToast.error({
+                    title: 'Error',
+                    message: 'Error al cargar los reportes',
+                    position: 'topRight',
+                  });
+                }
+            };
+            fetchReportsData();
         } else {
             handleReportFailure(createdReport.message || "Error Interno en el servidor" )
         }
     } catch (error) {
-        handleReportFailure(newReport.message || "Error Interno en el servidor" )
+        handleReportFailure("Error Interno en el servidor" )
     }
-    
-    
     closeForm(); 
   };
 

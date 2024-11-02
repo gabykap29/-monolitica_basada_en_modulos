@@ -2,9 +2,7 @@ import { fetchReports } from "../services/ReportService";
 import iziToast from "izitoast";
 
 // Función auxiliar para manejar un registro exitoso
-export const handleCreateReportSuccess = (data, reset, createReport) => {
-
-  createReport(data);
+export const handleCreateReportSuccess = (reset) => {
 
   // Notifica al usuario
   iziToast.success({

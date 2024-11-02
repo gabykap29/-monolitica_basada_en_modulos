@@ -8,12 +8,11 @@ import { AuditContext } from '../context/AuditsContext';
 export const AuditPage = () => {
   const {logs, filteredLogs, setFilteredLogs} = useContext(AuditContext)
 
-  // Filtra los logs según usuario, estado y método seleccionados
+  // Filtra los logs según estado y método seleccionados
   const handleFilter = (filters) => {
-    const { usuario, estado, metodo } = filters;
+    const { estado, metodo } = filters;
     const filtered = logs.filter(log => {
       return (
-        (!usuario || log.message.usuario === usuario) &&
         (!estado || log.message.estado === parseInt(estado)) &&
         (!metodo || log.message.metodo === metodo)
       );

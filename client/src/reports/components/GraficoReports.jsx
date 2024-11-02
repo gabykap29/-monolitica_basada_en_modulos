@@ -22,7 +22,7 @@ export const GraficoReports = ({reports}) => {
     ],
   };
   return (
-    <div className="d-flex justify-content-center" style={{ width: "250px", height: "250px" }}>
+    <div className="d-flex justify-content-center d-none d-lg-block" style={{ width: "250px", height: "250px" }}>
         <Doughnut data={data} />
     </div>
   )

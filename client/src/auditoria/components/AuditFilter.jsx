@@ -1,35 +1,20 @@
 import React, { useState } from 'react';
 
 const AuditFilter = ({ onFilter }) => {
-  const [usuario, setUsuario] = useState('');
   const [estado, setEstado] = useState('');
   const [metodo, setMetodo] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onFilter({ usuario, estado, metodo });
+    onFilter({ estado, metodo });
   };
 
   return (
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="row">
-          {/* Filtro por Usuario */}
-          <div className="col-3">
-            <label htmlFor="usuario">Usuario</label>
-            <select
-              id="usuario"
-              className="form-control"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-            >
-              <option value="">Todos</option>
-              <option value="admin">Admin</option>
-              <option value="No logged">No logged</option>
-            </select>
-          </div>
 
           {/* Filtro por Estado */}
-          <div className="col-3">
+          <div className="col-4">
             <label htmlFor="estado">Estado</label>
             <input
               type="number"
@@ -42,7 +27,7 @@ const AuditFilter = ({ onFilter }) => {
           </div>
 
           {/* Filtro por Método */}
-          <div className="col-3">
+          <div className="col-4">
             <label htmlFor="metodo">Método</label>
             <select
               id="metodo"

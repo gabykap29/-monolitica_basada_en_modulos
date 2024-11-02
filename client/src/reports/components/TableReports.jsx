@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { ReportContext } from "../context/ReportContext";
-import { fetchReports } from "../services/ReportService";
 import { FaTrash } from "react-icons/fa";
 import { FaFilePdf } from "react-icons/fa6";
 import { handleDeleteReport } from "../handlers/HandlersReports";
@@ -10,24 +9,16 @@ import { env } from "../../common/config/config";
 
 
 const CardReports = () => {
-  const { findAllReports, dispatchReports, reports, deleteReport } = useContext(ReportContext);
+  const { reports, deleteReport } = useContext(ReportContext);
   const [selectedType, setSelectedType] = useState("Todos");
 
-  useEffect(() => {
-    const fetchReportsData = async () => {
-      const data = await fetchReports("reports", "GET", null);
-      findAllReports(data);
-    };
-    fetchReportsData();
-  }, [dispatchReports]);
-
+  // Funcion para buscar el pdf y descargarlo
   const BuscarPdf = (filename) => {
     const encodedFilename = encodeURIComponent(filename);
     const url = `${env.SERVER_PATH}pdf-reports/${encodedFilename}`;
-    // Usar window.open para abrir la URL en una nueva pestaña
+    // Se usa window.open para abrir la URL en una nueva pestaña
     window.open(url, "_blank");
   };
-
 
   const filteredReports = reports.filter((report) =>
     selectedType === "Todos" ? true : report.typeReport === selectedType
@@ -35,11 +26,11 @@ const CardReports = () => {
 
   return (
     <div className="d-flex gap-4 justify-content-center">
-      <div style={{ width: "80%" }}>
+      <div style={{ width: "80%" }} className="d-flex flex-column justify-content-center align-items-center">
         {/* Filtrador */}
         <UtilsReports selectedType={selectedType} setSelectedType={setSelectedType}/>
         {/* Cards de Reportes */}
-        <div className="d-flex flex-wrap gap-4">
+        <div className="d-flex flex-wrap gap-4 justify-content-center">
           {filteredReports && filteredReports.length > 0 ? (
             filteredReports.map((report) => (
               <div

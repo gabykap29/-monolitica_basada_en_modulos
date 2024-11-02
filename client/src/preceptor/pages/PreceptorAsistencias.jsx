@@ -1,5 +1,4 @@
 import { useApiFetch } from '../../common/hooks/apiFetch'
-
 import { useEffect, useState } from 'react'
 
 import { Calendar, dayjsLocalizer } from "react-big-calendar"
@@ -14,6 +13,7 @@ import { FaRegEdit } from "react-icons/fa";
 
 import Sidebar from '../../common/components/Sidebar'
 import Header from '../../common/components/Header'
+import { StudentSelector } from "../components/StudentSelector"
 
 export const PreceptorCalendar = () => {
     dayjs.locale("es")
@@ -28,8 +28,6 @@ export const PreceptorCalendar = () => {
 
             const month = dayjs().format("YYYY-MM")
             const response = await useApiFetch("/attendancesMonth", "GET", "", month)
-
-            console.log(response)
 
             if (response.status === 200) {
 
@@ -47,10 +45,6 @@ export const PreceptorCalendar = () => {
         })()
     }, [])
 
-    useEffect(() => {
-        console.log("Eventos actuales:", events);
-    }, [events]);
-
     const dayPropGetter = (date) => {
         const isToday = dayjs().isSame(date, 'day')
         return isToday ? { style: { backgroundColor: "#38bdf8" } } : {}
@@ -66,7 +60,7 @@ export const PreceptorCalendar = () => {
 
         const formattedDate = dayjs(date).format("YYYY-MM-DD");
 
-        const response = await useApiFetch("/attendances", "POST", {date: formattedDate})
+        const response = await useApiFetch("/attendances", "POST", { date: formattedDate })
 
         if (response.status === 200) {
             const attendances = response.attendances.map(attendance => ({
@@ -163,13 +157,15 @@ export const PreceptorCalendar = () => {
                     <div className="container mt-4 p-4">
 
                         {/* // !ACCIONES */}
-                        <div className='pb-2'>
-
+                        <div className='pb-2 d-flex'>
                             <form onSubmit={findByDate}>
                                 <input type="text" placeholder='haga click en una fecha' value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
                                 <button type='submit' className='btn btn-primary'>Buscar por fecha</button>
                             </form>
+
+                            <StudentSelector setEvents={setEvents} />
                         </div>
+
 
                         <Calendar
                             localizer={localizer}

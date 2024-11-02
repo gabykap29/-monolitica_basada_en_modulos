@@ -104,6 +104,25 @@ export class AttendanceController {
         }
     }
 
+    getAllAttendancesByUserParams = async (req: Request, res: Response): Promise<void> => {
+        try {
+
+            const attendances = await this.AttendanceService.findAttendancesByUser(req.params);
+
+            res.status(200).json({
+                status: 200,
+                attendances: attendances
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 500,
+                message: error instanceof Error ? error.message : "Error interno del servidor"
+            });
+        }
+    }
+
     getAllAttendancesByUser = async (req: Request, res: Response): Promise<void> => {
         try {
 

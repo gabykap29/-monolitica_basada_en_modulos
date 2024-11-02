@@ -83,6 +83,21 @@ export class AttendanceService {
         }
     }
 
+    public async findAttendancesByUserParams(id: string) {
+        try {
+
+            const attendances = await this.AttendanceRepository.findAllByStudent(id);
+
+            return attendances
+
+        } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error ? error.message : "Error al buscar las asistencia del estudiante"
+            );
+        }
+    }
+
     public async findAttendancesGroupedByDate(month: string) {
 
         try {

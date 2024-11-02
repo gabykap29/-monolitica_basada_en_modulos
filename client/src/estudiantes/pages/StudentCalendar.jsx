@@ -34,7 +34,7 @@ export const StudentCalendar = () => {
                 setEvents(formatedAttendance);
             }
         })()
-    }, [])
+    }, [toggle])
 
     useEffect(() => {
         console.log("Eventos actuales:", events);

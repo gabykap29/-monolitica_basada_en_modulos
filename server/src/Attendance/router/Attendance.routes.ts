@@ -10,6 +10,8 @@ router.get("/attendance/:attendance", attendanceController.getAttendanceById);
 
 router.get("/attendances", AllowRequest.isAllowed, attendanceController.getAllAttendancesByUser);
 
+router.get("/attendances/:id", AllowRequest.isAllowed, attendanceController.getAllAttendancesByUserParams);
+
 router.get("/attendancesMonth/:month", AllowRequest.isAllowed, attendanceController.getAttendancesByMonth);
 
 router.post("/attendance", attendanceController.createAttendance);

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { checkRolAdmin } from '../../Auth/midlewares/checkRol';
+import { checkRolAdmin } from '../../Auth/middlewares/checkRol';
 const router = Router();
 
 router.get("/", (req, res) => {

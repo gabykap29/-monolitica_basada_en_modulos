@@ -3,7 +3,7 @@ import { IAttendance } from "../model/Attendance"
 import UserService from "../../Users/service/UserService"
 import { CustomError } from "../../Server/helpers/customError";
 import dayjs from "dayjs";
-
+import { decodeToken, IContentToken } from "../../Auth/helpers/jwt"
 
 const userService = new UserService()
 
@@ -56,10 +56,12 @@ export class AttendanceService {
         }
     }
 
-    public async findAttendancesByUser(idUser: string) {
+    public async findAttendancesByUser(token: string) {
         try {
-            const attendances = await this.AttendanceRepository.findAllByStudent
-                (idUser);
+
+            const idUser: = decodeToken(token)
+
+            const attendances = await this.AttendanceRepository.findAllByStudent(idUser);
 
             return attendances
 
@@ -75,30 +77,22 @@ export class AttendanceService {
         try {
             const attendances = await this.AttendanceRepository.findAllAgrupedByDate(month);
 
+            console.log(attendances);
+
             if (typeof attendances !== "boolean") {
-                const formatedAttendances = {
-                    [month]: attendances.reduce((acc, attendance) => {
-                        const day = dayjs(attendance.createdAt).format("DD");
-                        // Si el día no existe aún en el acumulador, lo inicializamos como un array vacío
-                        if (!acc[day]) {
-                            acc[day] = [];
-                        }
-                        // Agregamos la asistencia del día al array
-                        acc[day].push({
-                            _id: attendance._id,
-                            idStudent: attendance.idStudent,
-                            start: attendance.updatedAt,
-                            end: attendance.createdAt,
-                            title: attendance.isPresent
-                        });
+                const formatedAttendances = attendances.map((attendance) => (
+                    {
+                        id: attendance._id,
+                        idStudent: attendance.idStudent,
+                        start: attendance.createdAt,
+                        end: attendance.createdAt,
+                        title: attendance.isPresent
 
-                        return acc
+                    }))
 
-                    }, {} as Record<string, Array<{ _id: string | unknown; idStudent: any; start: Date | undefined; end: Date | undefined; title: boolean }>>)
-                }
-
-                return formatedAttendances
+                return formatedAttendances;
             }
+
         } catch (error) {
             console.log(error);
             throw new Error(

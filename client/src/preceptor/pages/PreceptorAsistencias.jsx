@@ -21,21 +21,21 @@ export const PreceptorCalendar = () => {
         (async () => {
             const response = await useApiFetch("/attendancesMonth", "GET", "", dayjs().format("YYYY-MM"))
 
+            console.log(response);
+
+
             if (response.status === 200) {
-                const attendancesData = [ ]
-                
-                
-                response.attendances[`${dayjs().format("YYYY-MM")}`][`${dayjs().format("DD")}`];
-                // Asegurarse de aplanar y formatear los eventos correctamente
 
-                const formattedEvents = attendancesData?.map(attendance => ({
-                    start: new Date(attendance.start),
-                    end: new Date(attendance.end),
-                    title: attendance.title ? "Presente" : "Ausente"
-                })) || [];
+                const formatedAttendance = response?.attendances?.map((attendance) => ({
+                    id: attendance.id,
+                    idStudent: attendance.idStudent,
+                    start: new Date(attendance.end), // Asegúrate de usar el campo correcto
+                    end: new Date(attendance.end),     // Asegúrate de usar el campo correcto
+                    title: attendance.title   // Asegúrate de usar el campo correcto
+                }));
 
-                setEvents(formattedEvents);
-                3
+                setEvents(formatedAttendance);
+
                 console.log("EVENTOS FETCH");
 
                 console.log(events);

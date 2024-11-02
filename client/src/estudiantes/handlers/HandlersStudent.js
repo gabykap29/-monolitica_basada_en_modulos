@@ -27,13 +27,13 @@ export const handleFailure = (message) => {
     });
 };
 
-export const handleEditSuccess = (message, navigate) => {
+export const handleEditSuccess = (data, navigate, updateStudent) => {
+    updateStudent(data.user)
     iziToast.success({
       title: "Éxito",
-      message: message,
+      message: data.message,
       position: "topRight"
     })
-
     navigate("/IPF/students/")
 }
 

@@ -38,6 +38,17 @@ export const StudentProvider = ({ children }) => {
     }
   }
 
+  const updateStudent = (data) => {
+    try {
+      dispatchStudents({
+        type: typeAction.UPDATE_DATA,
+        payload: data
+      })
+    } catch (error) {
+      console.error("Error al actualizar el estudiante. Inténtalo de nuevo.", error);
+    }
+  }
+
   const deleteStudent = (id) => {
     try {
       dispatchStudents({
@@ -50,7 +61,7 @@ export const StudentProvider = ({ children }) => {
   }
 
   return (
-    <StudentContext.Provider value={{ students: state.students, dispatchStudents, createStudent, deleteStudent, findAllStudents }}>
+    <StudentContext.Provider value={{ students: state.students, dispatchStudents, createStudent, deleteStudent, findAllStudents, updateStudent }}>
       {children}
     </StudentContext.Provider>
   );

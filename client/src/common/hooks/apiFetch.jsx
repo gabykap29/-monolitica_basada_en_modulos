@@ -3,6 +3,8 @@ export const useApiFetch = async (route, method, payload, param) => {
     const apiRoute = import.meta.env.VITE_API_SERVER
 
     const url = `${apiRoute}${route}`
+    console.log(url);
+
 
     const token = localStorage.getItem("token")
 
@@ -14,7 +16,6 @@ export const useApiFetch = async (route, method, payload, param) => {
         headers["Authorization"] = `Bearer ${token}`;
     }
 
-    //! SIN ARCHIVOS
     if (method === "GET") {
         try {
 

@@ -14,31 +14,30 @@ export const PreceptorCalendar = () => {
     const localizer = dayjsLocalizer(dayjs)
     const [events, setEvents] = useState([])
     const [attendance, setAttendance] = useState(null)
+    const [day, setDay] = useState(null)
     const [date, setDate] = useState(null)
     const [view, setView] = useState('month');
 
     useEffect(() => {
         (async () => {
-            const response = await useApiFetch("/attendancesMonth", "GET", "", dayjs().format("YYYY-MM"))
 
-            console.log(response);
+            const month = dayjs().format("YYYY-MM")
+            const response = await useApiFetch("/attendancesMonth", "GET", "", month)
 
+            console.log(response)
 
             if (response.status === 200) {
 
                 const formatedAttendance = response?.attendances?.map((attendance) => ({
                     id: attendance.id,
                     idStudent: attendance.idStudent,
-                    start: new Date(attendance.end), // Asegúrate de usar el campo correcto
-                    end: new Date(attendance.end),     // Asegúrate de usar el campo correcto
-                    title: attendance.title   // Asegúrate de usar el campo correcto
+                    start: new Date(attendance.end),
+                    end: new Date(attendance.end),
+                    title: attendance.title
                 }));
 
                 setEvents(formatedAttendance);
 
-                console.log("EVENTOS FETCH");
-
-                console.log(events);
             }
         })()
     }, [])
@@ -49,41 +48,41 @@ export const PreceptorCalendar = () => {
 
     const components = {
         event: ({ event }) => (
-            <div style={{ backgroundColor: (event.title === "Presente" ? "green" : "red") }}>
+            <div style={{ backgroundColor: (event.title === "Presente" ? "#22c55e" : "#dc2626") }}>
                 {event.title === "Presente" ? <FaCheck /> : <MdOutlineCancel />}
                 {event.title}
             </div>
         ),
     }
 
-    const payload = {
-        idStudent: "671fa1df22b4b21baf289d93",
-        isPresent: true
-    }
+    // const payload = {
+    //     idStudent: "671fa1df22b4b21baf289d93",
+    //     isPresent: true
+    // }
 
     const dayPropGetter = (date) => {
         const isToday = dayjs().isSame(date, 'day')
-        return isToday ? { style: { backgroundColor: 'blue' } } : {}
+        return isToday ? { style: { backgroundColor: "#38bdf8" } } : {}
     }
 
-    const markAttendance = async (e) => {
-        e.preventDefault()
+    // const markAttendance = async (e) => {
+    //     e.preventDefault()
 
-        setAttendance(payload)
+    //     setAttendance(payload)
 
-        const response = await fetch("http://localhost:4000/api/attendance", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-        })
+    //     const response = await fetch("http://localhost:4000/api/attendance", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(payload),
+    //     })
 
-        const data = await response.json()
+    //     const data = await response.json()
 
-        alert(JSON.stringify(data))
-        window.location.reload()
-    }
+    //     alert(JSON.stringify(data))
+    //     window.location.reload()
+    // }
 
     const handleSelectSlot = ({ start }) => {
         setDate(start) // Guarda la fecha de inicio seleccionada en el estado
@@ -112,7 +111,7 @@ export const PreceptorCalendar = () => {
                 title: attendance.isPresent ? "Presente" : "Ausente"
             }));
 
-            setEvents(attendances); // Actualiza el estado de los eventos
+            setDay(attendances); // Actualiza el estado de los eventos
             setView('agenda'); // Cambia a la vista de agenda
             console.log("Eventos actualizados:", attendances); // Verifica los eventos
         }
@@ -131,6 +130,18 @@ export const PreceptorCalendar = () => {
                     <Header />
                     <div className="container mt-4 p-4">
 
+                        {/* // !ACCIONES */}
+                        <div className='pb-2'>
+                            {/*    <form onSubmit={markAttendance}>
+                                <button type='submit'>Marcar asistencia</button>
+                            </form> */}
+
+                            <form onSubmit={findByDate}>
+                                <input type="text" placeholder='haga click en una fecha' value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
+                                <button type='submit' className='btn btn-primary'>Buscar por fecha</button>
+                            </form>
+                        </div>
+
                         <Calendar
                             localizer={localizer}
                             style={{
@@ -139,7 +150,7 @@ export const PreceptorCalendar = () => {
                             }}
                             views={["month", 'agenda']}
                             defaultView='month'
-                            events={events}
+                            events={view === "month" ? events : day}
                             components={components}
                             dayPropGetter={dayPropGetter}
                             onSelectSlot={handleSelectSlot}
@@ -154,18 +165,6 @@ export const PreceptorCalendar = () => {
                                 agenda: "Lista"
                             }}
                         />
-
-                        {/* // !ACCIONES */}
-                        <div>
-                            <form onSubmit={markAttendance}>
-                                <button type='submit'>Marcar asistencia</button>
-                            </form>
-
-                            <form onSubmit={findByDate}>
-                                <input type="text" value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
-                                <button type='submit'>Buscar por fecha</button>
-                            </form>
-                        </div>
 
                     </div>
                 </main>

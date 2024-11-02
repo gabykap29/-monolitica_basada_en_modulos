@@ -13,7 +13,7 @@ const AppRoutes = () => {
       <Routes>
         {/* Ruta Principal del Login */}
         <Route 
-          path='/'
+          path='/login'
           element={
             <PublicRoute>
               <LoginPage />

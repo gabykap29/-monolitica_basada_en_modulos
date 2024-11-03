@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
 import Header from "../common/components/Header";
 import Sidebar from "../common/components/Sidebar";
+import { CardDataAdmin } from "./content/CardData";
 
 const HomePageAdmin = () => {
 
@@ -17,8 +19,21 @@ const HomePageAdmin = () => {
             <Header />
             <div className="container mt-4">
               <div className="row g-4">
-                {/* Acá va lo que se va a ver */}
-                <h1>Dashboard de Administradores</h1>
+                {
+                  CardDataAdmin.map( (card, index) => (
+                    <div key={index} className="col-md-6">
+                      <div className="card shadow-lg border-0" style={{ backgroundColor: card.background, borderRadius: '15px' }}>
+                        <div className="card-body text-white">
+                          <h5 className="card-title">{card.cardTitle}</h5>
+                          <p className="card-text">{card.cardText}</p>
+                          <Link to={card.to}>
+                            <button className="btn btn-light">Ver más</button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           </main>

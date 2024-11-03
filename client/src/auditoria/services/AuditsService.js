@@ -1,6 +1,6 @@
 import { env } from '../../common/config/config';
 
-export const fetchStudent = async(route, method, payload) => {
+export const fetchLogs = async(route, method) => {
     const url = `${env.SERVER_PATH}${route}`;
     const token = localStorage.getItem("token");
     const authHeader = token ? `${token}` : '';
@@ -13,10 +13,6 @@ export const fetchStudent = async(route, method, payload) => {
                 Authorization: authHeader,
             }
         };
-        
-        if (payload && method !== "DELETE") {
-            options.body = JSON.stringify(payload);
-        }
 
         const response = await fetch(url, options);
 

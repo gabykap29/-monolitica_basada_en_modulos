@@ -1,10 +1,9 @@
 import React from 'react'
-import Sidebar from '../../common/components/Sidebar';
-import Header from '../../common/components/Header';
-import UtilsStudent from '../components/UtilsStudent';
-import TableStudent from '../components/TableStudent';
+import Sidebar from '../../common/components/Sidebar'
+import Header from '../../common/components/Header'
+import TableReports from '../components/TableReports'
 
-export const StudentPage = () => {
+export const ReportsPage = () => {
   return (
     <>
       <div className="container-fluid" style={{ height: "100vh" }}>
@@ -18,8 +17,7 @@ export const StudentPage = () => {
           <main className="col-md-9 col-lg-10 px-0" style={{ overflowY: "auto", height: "100%", backgroundColor: "#f0f0f0" }}>
             <Header />
             <div className="container mt-4 p-4">
-              {/* Table */}
-                <TableStudent />
+              <TableReports />
             </div>
           </main>
         </div>

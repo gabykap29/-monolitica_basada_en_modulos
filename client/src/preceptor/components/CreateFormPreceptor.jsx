@@ -1,16 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
-import { FaUser, FaCalendarAlt, FaIdCard, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
-import { StudentContext } from "../context/StudentContext";
-import { fetchStudent } from "../services/StudentService";
-import { handleEditSuccess, handleFailure  } from "../handlers/HandlersStudent";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useContext } from "react";
+import { FaUser, FaCalendarAlt, FaIdCard, FaMapMarkerAlt, FaPhone, FaUserCircle, FaLock, FaEnvelope } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { PreceptorContext } from "../context/PreceptorContext";
+import { fetchPreceptor } from "../services/PreceptorService";
+import { handleFailure, handleRegistroSuccess } from "../handlers/HandlersPreceptor";
+import { useForm } from '../../common/hooks/useForm';
 
-const EditFormStudent = () => {
+const CreateFormPreceptor = () => {
+  const { createPreceptor } = useContext(PreceptorContext);
   const navigate = useNavigate();
-  const { id } = useParams();
-  const {updateStudent} = useContext(StudentContext)
 
-  const [form, setForm] = useState({
+  const {form, handleInputChange, reset} = useForm({
     names: "",
     lastname: "",
     birthdate: "",
@@ -20,67 +20,27 @@ const EditFormStudent = () => {
     username: "",
     pass: "",
     mail: "",
-    role: "student"
-  });
-
-  useEffect(() => {
-    const getStudentData = async () => {
-      try {
-        const { user } = await fetchStudent(`user/${id}`, "GET", null);
-
-        const formattedData = {
-          names: user.names,
-          lastname: user.lastname,
-          birthdate: formattedDate(user.birthdate),
-          dni: user.dni,
-          address: user.address,
-          phone: user.phone,
-          username: user.username,
-          pass: user.pass,
-          mail: user.mail,
-          role: user.role
-        }
-        setForm(formattedData)
-      } catch (error) {
-        handleRegisterFailure("Error al cargar los datos del estudiante.");
-        console.error("Error al obtener el estudiante:", error);
-      }
-    };
-    getStudentData();
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
-  const formattedDate = (date) => {
-    if (!date) return "";
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
+    role: "preceptor"
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const updatedStudent = await fetchStudent(`users/${id}`, "PUT", form);
-      if (updatedStudent) {
-        handleEditSuccess(updatedStudent, navigate, updateStudent);
+      const newPreceptor = await fetchPreceptor("users", "POST", form);
+      if (newPreceptor) {
+        handleRegistroSuccess(newPreceptor, reset, navigate, createPreceptor);
       } else {
-        handleFailure(updatedStudent.message || "Error Interno");
+        handleFailure(newPreceptor.message || "Error Interno" )
       }
     } catch (error) {
-      handleRegisterFailure("Error de conexión. Por favor, intenta nuevamente.");
-      console.error("Error al actualizar el estudiante:", error);
+      handleFailure("Error de conexión. Por favor, intenta nuevamente.");
+      console.error("Error al crear preceptor:", error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2 shadow-lg">
-      <h2 className="mb-3 text-center">Editar Estudiante</h2>
+      <h2 className="mb-3 text-center">Crear Estudiante</h2>
 
       {/* Datos Personales */}
       <h4 className="mt-3">Datos Personales</h4>
@@ -158,10 +118,51 @@ const EditFormStudent = () => {
         </div>
       </div>
 
+      {/* Datos de Usuario */}
+      <h4 className="mt-4">Datos de Usuario</h4>
+      <div className="row">
+        <div className="col-md-4 mb-3 d-flex align-items-center">
+          <FaUserCircle className="me-2" />
+          <input
+            type="text"
+            name="username"
+            value={form.username}
+            onChange={handleInputChange}
+            className="form-control"
+            placeholder="Nombre de usuario"
+            required
+          />
+        </div>
+        <div className="col-md-4 mb-3 d-flex align-items-center">
+          <FaLock className="me-2" />
+          <input
+            type="password"
+            name="pass"
+            value={form.pass}
+            onChange={handleInputChange}
+            className="form-control"
+            placeholder="Contraseña"
+            required
+          />
+        </div>
+        <div className="col-md-4 mb-3 d-flex align-items-center">
+          <FaEnvelope className="me-2" />
+          <input
+            type="email"
+            name="mail"
+            value={form.mail}
+            onChange={handleInputChange}
+            className="form-control"
+            placeholder="Correo electrónico"
+            required
+          />
+        </div>
+      </div>
+
       <Link to={"/IPF/students/"} className="btn btn-secondary m-2">Volver</Link>
-      <button type="submit" className="btn btn-primary m-2">Actualizar Estudiante</button>
+      <button type="submit" className="btn btn-primary m-2">Crear Estudiante</button>
     </form>
   );
 };
 
-export default EditFormStudent;
+export default CreateFormPreceptor;

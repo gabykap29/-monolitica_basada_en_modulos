@@ -5,7 +5,7 @@ const cardColors = {
     administracion: "#fdcb6e" 
 };
 
-export const CardData = [
+export const CardDataAdmin = [
     {
         background: cardColors.deteccion,
         cardTitle: "Alumnos",
@@ -16,12 +16,18 @@ export const CardData = [
         background: cardColors.registro,
         cardTitle: "Asistencias",
         cardText: "Sistema para la gestión de los alumnos.",
-        to: "/IPF/preceptor/asistencias"
+        to: "/IPF/asistencias"
     },
     {
         background: cardColors.monitoreo,
         cardTitle: "Reportes",
         cardText: "Sistema para la gestión de los Reportes.",
         to: "/IPF/reports"
+    },
+    {
+        background: cardColors.administracion,
+        cardTitle: "Auditoria",
+        cardText: "Sistema para la gestión de las auditorías.",
+        to: "/IPF/audits"
     },
 ]

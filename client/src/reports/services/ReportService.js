@@ -1,6 +1,6 @@
 import { env } from '../../common/config/config';
 
-export const fetchStudent = async(route, method, payload) => {
+export const fetchReports = async(route, method, payload ) => {
     const url = `${env.SERVER_PATH}${route}`;
     const token = localStorage.getItem("token");
     const authHeader = token ? `${token}` : '';

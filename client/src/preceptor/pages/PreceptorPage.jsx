@@ -1,10 +1,9 @@
 import React from 'react'
-import Sidebar from '../../common/components/Sidebar';
-import Header from '../../common/components/Header';
-import UtilsStudent from '../components/UtilsStudent';
-import TableStudent from '../components/TableStudent';
+import Sidebar from '../../common/components/Sidebar'
+import Header from '../../common/components/Header'
+import TablePreceptor from '../components/TablePreceptor'
 
-export const StudentPage = () => {
+export const PreceptorPage = () => {
   return (
     <>
       <div className="container-fluid" style={{ height: "100vh" }}>
@@ -19,7 +18,7 @@ export const StudentPage = () => {
             <Header />
             <div className="container mt-4 p-4">
               {/* Table */}
-                <TableStudent />
+                <TablePreceptor />
             </div>
           </main>
         </div>

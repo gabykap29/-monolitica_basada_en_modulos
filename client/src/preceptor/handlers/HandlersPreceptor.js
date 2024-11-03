@@ -1,11 +1,11 @@
 import iziToast from "izitoast"
 import 'izitoast/dist/css/iziToast.min.css';
-import { fetchStudent } from "../services/StudentService";
+import { fetchPreceptor } from "../services/PreceptorService";
 import Swal from 'sweetalert2';
 
 // Función auxiliar para manejar un registro exitoso
-export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
-    createStudent(data.user);
+export const handleRegistroSuccess = (data, reset, navigate, createPreceptor) => {
+    createPreceptor(data.user);
   
     // Notifica al usuario
     iziToast.success({
@@ -16,10 +16,10 @@ export const handleRegistroSuccess = (data, reset, navigate, createStudent) => {
   
     // Reinicia formulario y redirige
     reset();
-    navigate("/IPF/students/");
+    navigate("/IPF/preceptores/");
 };
   
-  // Función auxiliar para manejar un error de estudiantes
+// Función auxiliar para manejar un error de preceptores
 export const handleFailure = (message) => {
     iziToast.error({
         title: "Error",
@@ -38,7 +38,7 @@ export const handleEditSuccess = (data, navigate, updateStudent) => {
     navigate("/IPF/students/")
 }
 
-export const handleDeleteStudent = async (id, deleteStudent) => {
+export const handleDeletePreceptor = async (id, deletePreceptor) => {
   // Muestra la confirmación al usuario
   const result = await Swal.fire({
     title: '¿Estás seguro?',
@@ -54,9 +54,9 @@ export const handleDeleteStudent = async (id, deleteStudent) => {
   // Verifica si el usuario confirmó la eliminación
   if (result.isConfirmed) {
     try {
-      const data = await fetchStudent(`users/${id}`, "DELETE", null);
+      const data = await fetchPreceptor(`users/${id}`, "DELETE", null);
 
-      deleteStudent(id);
+      deletePreceptor(id);
 
       // Notifica al usuario de éxito
       iziToast.success({
@@ -70,7 +70,7 @@ export const handleDeleteStudent = async (id, deleteStudent) => {
         message: "Error interno en el servidor",
         position: "topRight",
       });
-      console.error("Error al eliminar el estudiante", error);
+      console.error("Error al eliminar el preceptor", error);
     }
   }
 };

@@ -13,6 +13,9 @@ import { AttendanceService } from '../../Attendance/service/Attendance.services'
 import UserService from '../../Users/service/UserService';
 import { CustomError } from '../helpers/customError';
 import { loggerMiddleware } from '../middlewares/winston';
+import path from "path";
+import auditRouter from "../../Aud/routes/audit.routes"
+
 
 const attendanceService = new AttendanceService();
 const userService = new UserService();
@@ -43,6 +46,8 @@ class Server {
     this.app.use('/api/', userRouter);
     this.app.use('/api/', authRouter);
     this.app.use('/api/', attendanceRouter);
+    this.app.use('/reports', express.static(path.join(__dirname, 'Reports/Docs')));
+    this.app.use('/api/', auditRouter)
   }
 
   private scheduleTasks(): void {

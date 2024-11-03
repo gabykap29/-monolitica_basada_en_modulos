@@ -20,8 +20,8 @@ const logger = winston.createLogger({
   format: winston.format.json(),
   defaultMeta: { service: 'user-service' },
   transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
+    new winston.transports.File({ filename: './src/Aud/error/error.log', level: 'error' }),
+    new winston.transports.File({ filename: './src/Aud/logs/combined.log' }),
   ],
 });
 
@@ -39,12 +39,22 @@ export const loggerMiddleware = async (
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
+  // Extrae el nombre de usuario desde el header
   const header = req.headers.authorization || '';
   const username = await extractUsername(header);
-  logger.info(
-    `Usuario: ${username} Cliente: ${req.ip || req.headers['x-forwarded-for']}  Method: ${req.method} - URL: ${req.url} - Status: ${res.statusCode},`,
-  );
+
+  // Crea un objeto log con propiedades separadas
+  const logData = {
+    usuario: username,
+    cliente: req.ip || req.headers['x-forwarded-for'],
+    metodo: req.method,
+    url: req.url,
+    estado: res.statusCode,
+  };
+
+  // Registra cada campo en el objeto
+  logger.info(logData);
+
   next();
 };
-
 export default logger;

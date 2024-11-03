@@ -3,7 +3,6 @@ import Swal from 'sweetalert2';
 export const handleLoginSuccess = (data, reset, navigate, login) => {
     // Actualiza estado global
     login(data);
-    console.log(data)
   
     // Guarda datos en localStorage
     localStorage.setItem("token", data.token);

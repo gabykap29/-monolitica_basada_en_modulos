@@ -4,6 +4,7 @@ import { AiFillHome } from 'react-icons/ai';
 import { BsFillPersonFill } from 'react-icons/bs'; 
 import { GiArchiveRegister } from 'react-icons/gi'; 
 import { FaUserShield } from 'react-icons/fa'; 
+import { RiUserSharedFill } from "react-icons/ri";
 
 const Sidebar = () => {
   const [currentPath, setCurrentPath] = useState("");
@@ -101,6 +102,25 @@ const Sidebar = () => {
               >
                 <BsFillPersonFill className="me-2" size={20} />
                 Estudiantes
+              </Link>
+            </li>
+          )
+        }
+        {
+          (role === "admin") && (
+            <li className="nav-item" style={{ marginTop: "10px" }}>
+              <Link
+                to="/IPF/preceptores/"
+                className="nav-link text-white"
+                style={{
+                  ...linkStyle,
+                  ...(currentPath === "/IPF/preceptores/" ? activeLinkStyle : {}),
+                }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <RiUserSharedFill className="me-2" size={20} />
+                Preceptores
               </Link>
             </li>
           )

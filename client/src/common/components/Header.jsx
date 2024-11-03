@@ -18,7 +18,6 @@ const Header = () => {
 
     // Obtener la ruta actual
     const currentPath = window.location.pathname;
-    console.log(currentPath);
     
     // Actualiza el título según la ruta actual
     setTitle(routeTitles[currentPath] || "Panel de Control"); // Valor predeterminado

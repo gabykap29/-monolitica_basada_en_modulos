@@ -40,7 +40,7 @@ const CreateFormPreceptor = () => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2 shadow-lg">
-      <h2 className="mb-3 text-center">Crear Estudiante</h2>
+      <h2 className="mb-3 text-center">Crear Preceptor</h2>
 
       {/* Datos Personales */}
       <h4 className="mt-3">Datos Personales</h4>
@@ -159,7 +159,7 @@ const CreateFormPreceptor = () => {
         </div>
       </div>
 
-      <Link to={"/IPF/students/"} className="btn btn-secondary m-2">Volver</Link>
+      <Link to={"/IPF/preceptores/"} className="btn btn-secondary m-2">Volver</Link>
       <button type="submit" className="btn btn-primary m-2">Crear Estudiante</button>
     </form>
   );

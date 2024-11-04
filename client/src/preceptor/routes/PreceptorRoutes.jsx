@@ -9,8 +9,7 @@ import { PreceptorAsistenciasManual } from "../pages/PreceptorAsistenciasManual"
 export const PreceptorRoutes = () => {
     return (
         <Routes>
-            <Route path="/preceptor" element={<HomePage />} />
-            <Route path="/preceptor/asistencias" element={<PreceptorCalendar />} />
+            <Route path="/preceptores/asistencias/" element={<PreceptorCalendar />} />
             <Route path="/preceptor/asistencias/create" element={<PreceptorAsistenciasManual />} />
             <Route path="/preceptores/" element={<PreceptorPage />} />
             <Route path="/preceptores/create/" element={<PreceptorCreate />} />

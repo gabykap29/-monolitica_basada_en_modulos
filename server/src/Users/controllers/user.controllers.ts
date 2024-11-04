@@ -78,6 +78,7 @@ class UserCtrl {
       res.status(201).json({
         status: 201,
         message: 'Usuario creado correctamente!',
+        user: creationResult
       });
     } catch (error) {
       const err = new CustomError(500, 'Error interno del servidor');
@@ -104,6 +105,7 @@ class UserCtrl {
       res.status(200).json({
         status: 200,
         message: 'Usuario actualizado con éxito!',
+        user: updateResult
       });
     } catch (error) {
       const err = new CustomError(500, 'Error interno del servidor');

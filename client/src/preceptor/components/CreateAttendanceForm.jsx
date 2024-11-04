@@ -62,7 +62,7 @@ export const CreateAttendanceForm = () => {
     return (
         <div className='bg-white p-4 rounded-2 shadow-lg'>
             <h2 className="mb-3 text-center">Crear Asistencia</h2>
-            <Link className='btn btn-secondary' to={"/IPF/preceptor/asistencias"}>Volver atras</Link>
+            <Link className='btn btn-secondary' to={"/IPF/preceptores/asistencias"}>Volver atras</Link>
 
             {/* Datos Personales */}
             <div className="d-flex justify-content-center align-items-start gap-5">

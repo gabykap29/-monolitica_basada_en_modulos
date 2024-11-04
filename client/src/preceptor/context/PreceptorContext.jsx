@@ -2,6 +2,7 @@ import { createContext, useEffect, useReducer } from "react";
 import { typeAction } from '../../common/types/type';
 import { fetchPreceptor } from "../services/PreceptorService";
 import { preceptorReducer } from "../reducer/PreceptorReducer";
+import { iziToast } from 'izitoast';
 
 export const PreceptorContext = createContext()
 

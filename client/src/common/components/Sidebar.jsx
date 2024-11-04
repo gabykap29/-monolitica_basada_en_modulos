@@ -5,6 +5,7 @@ import { BsFillPersonFill } from 'react-icons/bs';
 import { GiArchiveRegister } from 'react-icons/gi'; 
 import { FaUserShield } from 'react-icons/fa'; 
 import { RiUserSharedFill } from "react-icons/ri";
+import { FaHandPaper } from "react-icons/fa";
 
 const Sidebar = () => {
   const [currentPath, setCurrentPath] = useState("");
@@ -121,6 +122,25 @@ const Sidebar = () => {
               >
                 <RiUserSharedFill className="me-2" size={20} />
                 Preceptores
+              </Link>
+            </li>
+          )
+        }
+        {
+          (role === "admin" || role === "preceptor") && (
+            <li className="nav-item" style={{ marginTop: "10px" }}>
+              <Link
+                to="/IPF/preceptores/asistencias/"
+                className="nav-link text-white"
+                style={{
+                  ...linkStyle,
+                  ...(currentPath === "/IPF/preceptores/asistencias/" ? activeLinkStyle : {}),
+                }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <FaHandPaper className="me-2" size={20} />
+                Asistencias
               </Link>
             </li>
           )

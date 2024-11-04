@@ -1,6 +1,7 @@
 export const useApiFetch = async (route, method, payload, param) => {
 
-    const apiRoute = import.meta.env.VITE_API_SERVER
+    const apiRoute = "http://localhost:4000/api"
+    console.log(apiRoute)
 
     const url = `${apiRoute}${route}`
 

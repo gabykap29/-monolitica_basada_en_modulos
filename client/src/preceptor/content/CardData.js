@@ -16,12 +16,12 @@ export const CardData = [
         background: cardColors.registro,
         cardTitle: "Asistencias",
         cardText: "Sistema para la gestión de los alumnos.",
-        to: "/IPF/preceptor/asistencias"
+        to: "/IPF/preceptores/asistencias/"
     },
     {
         background: cardColors.monitoreo,
         cardTitle: "Reportes",
         cardText: "Sistema para la gestión de los Reportes.",
-        to: "/IPF/reports"
+        to: "/IPF/reports/"
     },
 ]

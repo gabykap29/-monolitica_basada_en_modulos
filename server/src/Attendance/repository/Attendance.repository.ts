@@ -78,7 +78,7 @@ export class AttendanceRepository {
         }
     }
 
-    async create(attendance: { idStudent: string, isPresent: boolean }): Promise<IAttendance> {
+    async create(attendance: { idStudent: string | String, isPresent: boolean }): Promise<IAttendance> {
         try {
             const newAttendance: IAttendance = await Attendance.create(attendance)
 

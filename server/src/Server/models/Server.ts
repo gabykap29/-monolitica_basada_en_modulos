@@ -8,6 +8,7 @@ import authRouter from '../../Auth/routes/auth.routes';
 import attendanceRouter from '../../Attendance/router/Attendance.routes';
 import reportRouter from '../../Reports/routes/reports.route'
 import { userInitial } from '../helpers/userInitial';
+import dayjs from 'dayjs';
 import cron from 'node-cron';
 import { AttendanceService } from '../../Attendance/service/Attendance.services';
 import { loggerMiddleware } from '../middlewares/winston';
@@ -51,11 +52,18 @@ class Server {
 
   private scheduleTasks(): void {
     cron.schedule('15 9 * * *', async () => {
-      console.log('Ejecutando la tarea de marcar ausentes a las 9:15 AM');
-      try {
-        attendanceService.markAbsent();
-      } catch (error) {
-        console.error('Error al registrar ausentes:', error);
+      const dayOfWeek = dayjs().day(); // 0 = Domingo, 6 = Sábado
+
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Verifica que no sea sábado ni domingo
+        console.log('Ejecutando la tarea de marcar ausentes a las 9:15 AM');
+
+        try {
+          await attendanceService.markAbsent();
+        } catch (error) {
+          console.error('Error al registrar ausentes:', error);
+        }
+      } else {
+        console.log('No se ejecuta la tarea de marcar ausentes los fines de semana');
       }
     });
   }

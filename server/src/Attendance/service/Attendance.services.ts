@@ -3,7 +3,7 @@ import { IAttendance } from "../model/Attendance"
 import UserService from "../../Users/service/UserService"
 import { CustomError } from "../../Server/helpers/customError";
 import dayjs from "dayjs";
-import { decodeToken } from "../../Auth/helpers/jwt"
+import { decodeToken, IContentToken } from "../../Auth/helpers/jwt"
 
 const userService = new UserService()
 
@@ -11,27 +11,34 @@ export class AttendanceService {
 
     private AttendanceRepository: AttendanceRepository = new AttendanceRepository();
 
-    public async markAttendance(attendanceData: { idStudent: string, isPresent: boolean }, token: string | undefined): Promise< { status: boolean, message: string }> {
+    public async markAttendance(attendanceData: { idStudent: string, isPresent: boolean }, token: string | undefined): Promise<{ status: boolean, message: string }> {
 
         try {
             const horaActual = dayjs();
             const limiteHora = dayjs().hour(9).minute(15);
+            console.log("TOKEN" + token);
 
-            if (horaActual.isBefore(limiteHora)) {
-
-                if (token && token !== "") {
-                    const idUser: any = decodeToken(token)
-                    const attendance = await this.AttendanceRepository.create({ idStudent: idUser.id, isPresent: attendanceData.isPresent });
-                    return attendance && { status: true, message: "Asistencia creada correctamete" };
+            if (typeof token === "string") {
+                const userInfo: IContentToken | boolean = decodeToken(token)
+                if (typeof userInfo !== "boolean") {
+                    if (userInfo.role === "student") {
+                        if (horaActual.isBefore(limiteHora)) {
+                            const attendance = await this.AttendanceRepository.create({ idStudent: userInfo?.id, isPresent: attendanceData.isPresent });
+                            return attendance && { status: true, message: "Asistencia creada correctamete" };
+                        } else {
+                            return {
+                                status: false, message: "Ya a pasado la fecha limite para marcar la asistencia, las " + limiteHora.format('HH:mm A')
+                            }
+                        }
+                    } else {
+                        const attendance = await this.AttendanceRepository.create({ idStudent: attendanceData.idStudent, isPresent: attendanceData.isPresent });
+                        return attendance && { status: true, message: "Asistencia creada correctamete" };
+                    }
                 } else {
-                    const attendance = await this.AttendanceRepository.create({ idStudent: attendanceData.idStudent, isPresent: attendanceData.isPresent });
-                    return attendance && { status: true, message: "Asistencia creada correctamete" };
+                    throw new Error("Token invalido")
                 }
             } else {
-                return {
-                    status: false, message: "Ya a pasado la fecha limite para marcar la asistencia, las " + limiteHora.format('HH:mm A')
-                }
-
+                throw new Error("No hay token en la petición")
             }
         } catch (error) {
             console.log(error);
@@ -164,7 +171,6 @@ export class AttendanceService {
 
     public async markAbsent(): Promise<boolean | undefined | any> {
         try {
-            console.log('EMPEZO EL Registro de ausentes completado')
             const todayDate = dayjs().format('YYYY-MM-DD')
 
             const students = await userService.getAllUser("student")
@@ -177,7 +183,7 @@ export class AttendanceService {
                     const isAbsent = !presentStudents.some(present => {
 
                         if (typeof present.idStudent === 'object') {
-                            console.log("Comparando:", { presentId: present.idStudent._id, _id: String(student._id) });
+                            // console.log("Comparando:", { presentId: present.idStudent._id, _id: String(student._id) });
 
                             return present?.idStudent?._id.toString() === String(student._id)
                         }
@@ -185,11 +191,10 @@ export class AttendanceService {
                     return isAbsent;
                 });
 
-                absentStudents.forEach(absent => {
-                    this.markAttendance({ idStudent: String(absent._id), isPresent: false }, "")
-                })
+                for (const absent of absentStudents) {
+                    const attendance = await this.AttendanceRepository.create({ idStudent: String(absent._id), isPresent: false });
+                }
 
-                console.log('Registro de ausentes completado')
                 return { presentLength: presentStudents.length, absentLength: absentStudents.length, sudentsLength: students.length }
             }
 

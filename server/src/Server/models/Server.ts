@@ -6,10 +6,14 @@ import { PORT } from '../config/config';
 import userRouter from '../../Users/routes/users.routes';
 import authRouter from '../../Auth/routes/auth.routes';
 import attendanceRouter from '../../Attendance/router/Attendance.routes';
+import reportRouter from '../../Reports/routes/reports.route'
 import { userInitial } from '../helpers/userInitial';
 import cron from 'node-cron';
 import { AttendanceService } from '../../Attendance/service/Attendance.services';
 import { loggerMiddleware } from '../middlewares/winston';
+import path from "path";
+import auditRouter from "../../Aud/routes/audit.routes"
+
 
 const attendanceService = new AttendanceService();
 
@@ -40,6 +44,9 @@ class Server {
     this.app.use('/api/', userRouter);
     this.app.use('/api/', authRouter);
     this.app.use('/api/', attendanceRouter);
+    this.app.use('/reports', express.static(path.join(__dirname, 'Reports/Docs')));
+    this.app.use('/api/', auditRouter)
+    this.app.use('/api', reportRouter);
   }
 
   private scheduleTasks(): void {

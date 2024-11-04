@@ -33,7 +33,7 @@ const CreateStudentForm = () => {
         handleFailure(newStudent.message || "Error Interno" )
       }
     } catch (error) {
-      handleRegisterFailure("Error de conexión. Por favor, intenta nuevamente.");
+      handleFailure("Error de conexión. Por favor, intenta nuevamente.");
       console.error("Error en el login:", error);
     }
   };

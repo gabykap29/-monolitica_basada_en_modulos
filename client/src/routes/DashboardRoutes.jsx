@@ -16,7 +16,7 @@ const DashboardRoutes = () => {
     case 'preceptor':
       return <HomePage />
     default:
-      return <Navigate to="/unauthorized" />; 
+      return <Navigate to="/" />; 
   }
 }
 

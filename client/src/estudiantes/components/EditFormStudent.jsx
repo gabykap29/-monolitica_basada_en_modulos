@@ -8,6 +8,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 const EditFormStudent = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const {updateStudent} = useContext(StudentContext)
 
   const [form, setForm] = useState({
     names: "",
@@ -65,9 +66,9 @@ const EditFormStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const updatedStudent = await fetchStudent(`/users/${id}`, "PUT", form);
+      const updatedStudent = await fetchStudent(`users/${id}`, "PUT", form);
       if (updatedStudent) {
-        handleEditSuccess("Editado correctamente", navigate);
+        handleEditSuccess(updatedStudent, navigate, updateStudent);
       } else {
         handleFailure(updatedStudent.message || "Error Interno");
       }

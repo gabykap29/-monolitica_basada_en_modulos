@@ -2,47 +2,33 @@ import { env } from '../../common/config/config';
 
 export const fetchStudent = async(route, method, payload) => {
     const url = `${env.SERVER_PATH}${route}`;
-
     const token = localStorage.getItem("token");
-    const authHeader = token ? `Bearer ${token}` : '';
+    const authHeader = token ? `${token}` : '';
 
-    if(method === "GET"){
-        try {
-            const response = await fetch(url, {
-              method: method,
-              headers: {
+    try {
+        const options = {
+            method,
+            headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${authHeader}`,
-              },
-            });
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("Error en la solicitud GET:", error);
-            throw error;
-        }
-    } else {
-        try {
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${authHeader}`,
-                },
-                body: JSON.stringify(payload),
-            });
-      
-            if (!response.ok) {
-                // Si el servidor devuelve un error, lanza una excepción con el mensaje del servidor
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Error en la solicitud");
+                Authorization: authHeader,
             }
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("Error en la solicitud:", error);
-            throw error;
+        };
+        
+        if (payload && method !== "DELETE") {
+            options.body = JSON.stringify(payload);
         }
+
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Error en la solicitud");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+        throw error;
     }
-          
-}
+};
+

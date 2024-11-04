@@ -3,7 +3,7 @@ import { IAttendance } from "../model/Attendance"
 import UserService from "../../Users/service/UserService"
 import { CustomError } from "../../Server/helpers/customError";
 import dayjs from "dayjs";
-import { decodeToken, IContentToken } from "../../Auth/helpers/jwt"
+import { decodeToken } from "../../Auth/helpers/jwt"
 
 const userService = new UserService()
 
@@ -11,23 +11,28 @@ export class AttendanceService {
 
     private AttendanceRepository: AttendanceRepository = new AttendanceRepository();
 
-    public async markAttendance(attendanceData: { idStudent: string, isPresent: boolean }, token: string | undefined): Promise<IAttendance> {
+    public async markAttendance(attendanceData: { idStudent: string, isPresent: boolean }, token: string | undefined): Promise< { status: boolean, message: string }> {
+
         try {
-            if (token && token !== "") {
-                const idUser: any = decodeToken(token)
+            const horaActual = dayjs();
+            const limiteHora = dayjs().hour(9).minute(15);
 
-                console.log(idUser);
-                console.log(token);
+            if (horaActual.isBefore(limiteHora)) {
 
-
-                const attendance = await this.AttendanceRepository.create({ idStudent: idUser.id, isPresent: attendanceData.isPresent });
-                return attendance;
+                if (token && token !== "") {
+                    const idUser: any = decodeToken(token)
+                    const attendance = await this.AttendanceRepository.create({ idStudent: idUser.id, isPresent: attendanceData.isPresent });
+                    return attendance && { status: true, message: "Asistencia creada correctamete" };
+                } else {
+                    const attendance = await this.AttendanceRepository.create({ idStudent: attendanceData.idStudent, isPresent: attendanceData.isPresent });
+                    return attendance && { status: true, message: "Asistencia creada correctamete" };
+                }
             } else {
-                const attendance = await this.AttendanceRepository.create({ idStudent: attendanceData.idStudent, isPresent: attendanceData.isPresent });
-                return attendance;
+                return {
+                    status: false, message: "Ya a pasado la fecha limite para marcar la asistencia, las " + limiteHora.format('HH:mm A')
+                }
+
             }
-
-
         } catch (error) {
             console.log(error);
             throw new Error(

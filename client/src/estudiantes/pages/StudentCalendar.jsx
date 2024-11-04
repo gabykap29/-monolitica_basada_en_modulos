@@ -7,6 +7,7 @@ import { FaCheck } from "react-icons/fa6";
 import { MdOutlineCancel } from "react-icons/md";
 import { useApiFetch } from '../../common/hooks/apiFetch'
 import { useToggle } from "../../common/hooks/useToggle"
+import { handleFailure } from '../../preceptor/handlers/HandlersPreceptor'
 
 export const StudentCalendar = () => {
     dayjs.locale("es")
@@ -36,10 +37,6 @@ export const StudentCalendar = () => {
         })()
     }, [toggle])
 
-    useEffect(() => {
-        console.log("Eventos actuales:", events);
-    }, [events]);
-
     const components = {
         event: ({ event }) => (
             <div className={`${event.title === "Presente" ? "bg-success" : "bg-danger"}  border border-white`} >
@@ -54,8 +51,11 @@ export const StudentCalendar = () => {
 
         const attendance = await useApiFetch("/attendance", "POST", { isPresent: true })
 
-        if (attendance.status === 200) {
-            alert("asistencia marcada correctamente")
+        if (attendance.status !== 200) {
+            handleFailure(attendance.attendance)
+            handleToggle(!toggle)
+        } else {
+            handleFailure(attendance.attendance)
             handleToggle(!toggle)
         }
     }

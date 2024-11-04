@@ -12,9 +12,9 @@ export class AttendanceController {
 
             const attendance = await this.AttendanceService.markAttendance(req.body, req.headers.authorization);
 
-            res.status(200).json({
-                status: 200,
-                attendance: attendance
+            res.status(attendance.status === true ? 200 : 401).json({
+                status: attendance.status === true ? 200 : 401,
+                attendance: attendance.message
             });
 
         } catch (error) {

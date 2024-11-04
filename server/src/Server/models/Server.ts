@@ -29,6 +29,7 @@ class Server {
     this.dbConnect();
     this.middlewares();
     this.routes();
+    this.serveFrontend();
     this.scheduleTasks();
   }
 
@@ -48,6 +49,16 @@ class Server {
     this.app.use('/reports', express.static(path.join(__dirname, 'Reports/Docs')));
     this.app.use('/api/', auditRouter)
     this.app.use('/api', reportRouter);
+  }
+
+  private serveFrontend(): void {
+    // Middleware para servir la carpeta 'dist' de Vite
+    this.app.use(express.static(path.join(__dirname, '../../dist')));
+
+    // Ruta de fallback para cualquier ruta que no sea manejada por el backend
+    this.app.get('*', (_req, res) => {
+      res.sendFile(path.join(__dirname, '../../dist', 'index.html'));
+    });
   }
 
   private scheduleTasks(): void {

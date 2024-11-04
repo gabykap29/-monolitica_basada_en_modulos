@@ -15,6 +15,7 @@ import { FaRegEdit, FaSearch } from "react-icons/fa";
 import Sidebar from '../../common/components/Sidebar'
 import Header from '../../common/components/Header'
 import { StudentSelector } from "../components/StudentSelector"
+import { Link } from 'react-router-dom'
 
 export const PreceptorCalendar = () => {
     dayjs.locale("es")
@@ -188,17 +189,25 @@ export const PreceptorCalendar = () => {
                     <div className="container mt-4 p-4">
 
                         {/* // !ACCIONES */}
-                        <div className='pb-2 d-flex align-items-center justify-content-center'>
-                            <form onSubmit={findByDate}>
+                        <div className='pb-2 d-flex align-items-center justify-content-center gap-5'>
+
+                            <form onSubmit={findByDate} className='d-flex gap-2'>
                                 <input type="text" placeholder='haga click en una fecha' value={date ? dayjs(date).format("YYYY-MM-DD") : ''} readOnly /> {/* Muestra la fecha en un formato legible */}
                                 <button type='submit' className='btn btn-primary'><FaSearch /></button>
                             </form>
 
-                            <StudentSelector handleAttendance={handleAttendance} />
+                            <div className=''>
+                                <StudentSelector handleAttendance={handleAttendance} />
+                            </div>
 
-                            <dir>
+                            <div>
                                 <button onClick={handleAllAttendances} className='btn btn-primary btn-sm'>Ver todas las asistencias</button>
-                            </dir>
+                            </div>
+
+                            <div>
+                                <Link to={"/IPF/preceptor/asistencias/create"} className='btn btn-primary'>Cargar asistencias manualmente</Link>
+                            </div>
+
                         </div>
 
 

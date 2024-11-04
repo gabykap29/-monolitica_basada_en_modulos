@@ -22,18 +22,20 @@ export const StudentSelector = ({ handleAttendance }) => {
     }, [])
 
     return (
-        <form onSubmit={(e) => handleAttendance(e, selectedStudent)}>
+        <div className='d-flex flex-column'>
             <label className='px-2' htmlFor="studentSelect">Selecciona un estudiante: </label>
-            <select className='mx-2' id="studentSelect" value={selectedStudent} onChange={handleSelectChange}>
-                <option value="">Seleccione un estudiante</option>
-                {students.map((student) => (
-                    <option key={student._id} value={student._id}>
-                        {student.names + " " + student.lastname}
-                    </option>
-                ))}
-            </select>
+            <form onSubmit={(e) => handleAttendance && handleAttendance(e, selectedStudent)} className='d-flex gap-2'>
+                <select className='mx-2' id="studentSelect" value={selectedStudent} onChange={handleSelectChange}>
+                    <option value="">Seleccione un estudiante</option>
+                    {students.map((student) => (
+                        <option key={student._id} value={student._id}>
+                            {student.names + " " + student.lastname}
+                        </option>
+                    ))}
+                </select>
 
-            <button type='submit' className='btn btn-primary'><FaSearch /></button>
-        </form>
+                <button type='submit' className='btn btn-primary btn-sm'><FaSearch /></button>
+            </form>
+        </div>
     )
 }

@@ -1,17 +1,23 @@
-# frontend/Dockerfile
-
 # Usa la imagen de Node como base
-FROM node:18 AS builder
+FROM node:20 AS builder
 
 # Establece el directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copia los archivos de tu aplicación
+# Copia los archivos de configuración primero (para aprovechar la caché en el futuro)
+COPY package*.json ./
+
+# Instala las dependencias
+RUN npm install
+
+# Luego, copia el resto de los archivos de la aplicación
 COPY . .
 
-# Instala las dependencias y construye la aplicación
-RUN npm install && npm run build
+# Configura la variable de entorno de la API del servidor
+ENV VITE_API_SERVER=http://localhost:4000/api
 
-# Directorio de destino de los archivos generados por la build
-# Esto es opcional, pero se recomienda
+# Construye la aplicación
+RUN npm run build
+
+# Define el comando para construir
 CMD ["npm", "run", "build"]

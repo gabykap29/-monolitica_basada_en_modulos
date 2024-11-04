@@ -1,10 +1,7 @@
 import { env } from "../../common/config/config";
 
 export const fetchAuth = async (route, method, payload) => {
-    
-    const apiRoute = import.meta.env.VITE_API_SERVER
-    
-    const URL = `${apiRoute}/${route}`;
+    const URL = `${env.SERVER_PATH}${route}`;
 
     const options = {
         method,

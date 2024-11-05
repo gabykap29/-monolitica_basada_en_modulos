@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const AttendanceController_1 = require("../controller/AttendanceController");
+const allowRequest_1 = require("../middleware/allowRequest");
+const attendanceController = new AttendanceController_1.AttendanceController();
+const router = (0, express_1.Router)();
+router.get("/attendance/:attendance", attendanceController.getAttendanceById);
+router.get("/attendances", allowRequest_1.AllowRequest.isAllowed, attendanceController.getAllAttendancesByUser);
+router.get("/attendances/:id", allowRequest_1.AllowRequest.isAllowed, attendanceController.getAllAttendancesByUserParams);
+router.get("/attendancesMonth/:month", allowRequest_1.AllowRequest.isAllowed, attendanceController.getAttendancesByMonth);
+router.post("/attendance", attendanceController.createAttendance);
+router.post("/absent", allowRequest_1.AllowRequest.isAllowed, attendanceController.createAbsent);
+router.post("/attendances", allowRequest_1.AllowRequest.isAllowed, attendanceController.getAttendancesByDate);
+router.delete("/attendance/:id", allowRequest_1.AllowRequest.isAllowed, attendanceController.deleteAttendance);
+router.put("/attendance/:id", allowRequest_1.AllowRequest.isAllowed, attendanceController.updateAttendance);
+exports.default = router;

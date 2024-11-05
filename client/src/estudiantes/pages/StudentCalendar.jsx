@@ -14,13 +14,15 @@ export const StudentCalendar = () => {
     const localizer = dayjsLocalizer(dayjs)
     const [events, setEvents] = useState([])
     const { handleToggle, toggle } = useToggle()
+    const [absents, setAbsents] = useState(0)
+    const [fullAbsents, setFullAbsents] = useState(6)
 
     useEffect(() => {
         (async () => {
 
             const response = await useApiFetch("/attendances", "GET")
 
-            console.log(response)
+            const absentCount = response.attendances?.filter(attendance => !attendance.isPresent).length || 0;
 
             if (response.status === 200) {
 
@@ -33,6 +35,8 @@ export const StudentCalendar = () => {
                 }));
 
                 setEvents(formatedAttendance);
+                setAbsents(absentCount);
+                setFullAbsents(fullAbsents - absentCount)
             }
         })()
     }, [toggle])
@@ -64,10 +68,14 @@ export const StudentCalendar = () => {
 
         <div className='flex '>
             {/* // !ACCIONES */}
-            <div className='pb-2'>
+            <div className='pb-2 d-flex align-items-start gap-5'>
                 <form onSubmit={markAttendance}>
                     <button className='btn btn-primary' type='submit'>Marcar Presente</button>
                 </form>
+
+                <p>Cantidad de faltas: <span className={`${absents > 6 && "text-danger"}`}>{absents}</span></p>
+
+                <p>Cantidad de faltas restantes para quedar libre: <span className={`${absents > 6 && "text-danger"}`} >{fullAbsents > 0 ? fullAbsents : "Estas libre"}</span></p>
 
             </div>
 

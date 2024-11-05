@@ -1,0 +1,19 @@
+version: '3.8' # Versión de Docker Compose
+
+services:
+  app: # Nombre del servicio
+    image: 'app4' # Nombre de la imagen
+    build: # Configuración de construcción
+      context: . # Ruta al directorio donde se encuentra tu Dockerfile
+      dockerfile: Dockerfile # Nombre del Dockerfile (opcional si es "Dockerfile")
+    ports:
+      - '4000:4000' # Mapeo de puertos
+    volumes:
+      - .:/app # Monta el directorio actual en /app del contenedor
+    environment:
+      PORT: 4000
+      MONGO_URI: mongodb+srv://testggacc:pKYKvDFywDL2mRlr@cluster.vbqhi.mongodb.net/
+      ALLOWED_IP: 127.0.0.1
+      IP_TOKEN: a631f41522aa77
+      JWT_SECRET: 17gisusbgklsdguiwn
+    command: ['npm', 'run', 'start'] # Comando para ejecutar tu aplicación

@@ -160,7 +160,7 @@ const CreateFormPreceptor = () => {
       </div>
 
       <Link to={"/IPF/preceptores/"} className="btn btn-secondary m-2">Volver</Link>
-      <button type="submit" className="btn btn-primary m-2">Crear Estudiante</button>
+      <button type="submit" className="btn btn-primary m-2">Crear Preceptor</button>
     </form>
   );
 };

@@ -99,7 +99,7 @@ export const PreceptorCalendar = () => {
     const Monthcomponent = {
         event: ({ event }) => (
             <div className={``} >
-                {"Ver asistencias"}
+                {"asistencias del dia"}
             </div >
         ),
     }

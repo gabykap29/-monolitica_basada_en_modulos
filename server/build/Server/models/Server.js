@@ -21,6 +21,7 @@ const users_routes_1 = __importDefault(require("../../Users/routes/users.routes"
 const auth_routes_1 = __importDefault(require("../../Auth/routes/auth.routes"));
 const Attendance_routes_1 = __importDefault(require("../../Attendance/router/Attendance.routes"));
 const reports_route_1 = __importDefault(require("../../Reports/routes/reports.route"));
+const userInitial_1 = require("../helpers/userInitial");
 const dayjs_1 = __importDefault(require("dayjs"));
 const node_cron_1 = __importDefault(require("node-cron"));
 const Attendance_services_1 = require("../../Attendance/service/Attendance.services");
@@ -70,7 +71,8 @@ class Server {
     scheduleTasks() {
         node_cron_1.default.schedule('15 9 * * *', () => __awaiter(this, void 0, void 0, function* () {
             const dayOfWeek = (0, dayjs_1.default)().day(); // 0 = Domingo, 6 = Sábado
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Verifica que no sea sábado ni domingo
+            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                // Verifica que no sea sábado ni domingo
                 console.log('Ejecutando la tarea de marcar ausentes a las 9:15 AM');
                 try {
                     yield attendanceService.markAbsent();
@@ -86,6 +88,7 @@ class Server {
     }
     listen() {
         this.app.listen(this.port, '0.0.0.0', () => __awaiter(this, void 0, void 0, function* () {
+            yield (0, userInitial_1.userInitial)();
             console.log('Servidor funcionando en el puerto: ' + this.port);
         }));
     }

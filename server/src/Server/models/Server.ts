@@ -6,18 +6,16 @@ import { PORT } from '../config/config';
 import userRouter from '../../Users/routes/users.routes';
 import authRouter from '../../Auth/routes/auth.routes';
 import attendanceRouter from '../../Attendance/router/Attendance.routes';
-import reportRouter from '../../Reports/routes/reports.route'
+import reportRouter from '../../Reports/routes/reports.route';
 import { userInitial } from '../helpers/userInitial';
 import dayjs from 'dayjs';
 import cron from 'node-cron';
 import { AttendanceService } from '../../Attendance/service/Attendance.services';
 import { loggerMiddleware } from '../middlewares/winston';
-import path from "path";
-import auditRouter from "../../Aud/routes/audit.routes"
-
+import path from 'path';
+import auditRouter from '../../Aud/routes/audit.routes';
 
 const attendanceService = new AttendanceService();
-
 
 class Server {
   private app: Application;
@@ -46,8 +44,11 @@ class Server {
     this.app.use('/api/', userRouter);
     this.app.use('/api/', authRouter);
     this.app.use('/api/', attendanceRouter);
-    this.app.use('/reports', express.static(path.join(__dirname, 'Reports/Docs')));
-    this.app.use('/api/', auditRouter)
+    this.app.use(
+      '/reports',
+      express.static(path.join(__dirname, 'Reports/Docs')),
+    );
+    this.app.use('/api/', auditRouter);
     this.app.use('/api', reportRouter);
   }
 
@@ -65,7 +66,8 @@ class Server {
     cron.schedule('15 9 * * *', async () => {
       const dayOfWeek = dayjs().day(); // 0 = Domingo, 6 = Sábado
 
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Verifica que no sea sábado ni domingo
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        // Verifica que no sea sábado ni domingo
         console.log('Ejecutando la tarea de marcar ausentes a las 9:15 AM');
 
         try {
@@ -74,14 +76,16 @@ class Server {
           console.error('Error al registrar ausentes:', error);
         }
       } else {
-        console.log('No se ejecuta la tarea de marcar ausentes los fines de semana');
+        console.log(
+          'No se ejecuta la tarea de marcar ausentes los fines de semana',
+        );
       }
     });
   }
 
-
   public listen(): void {
     this.app.listen(this.port, '0.0.0.0', async () => {
+      await userInitial();
       console.log('Servidor funcionando en el puerto: ' + this.port);
     });
   }

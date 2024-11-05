@@ -21,8 +21,8 @@ COPY . .
 
 # Define variables de entorno directamente
 ENV PORT=4000
-ENV MONGO_URI=mongodb+srv://testggacc:pKYKvDFywDL2mRlr@cluster.vbqhi.mongodb.net/
-ENV ALLOWED_IP=127.0.0.1
+ENV MONGO_URI=mongodb+srv://AgustinM12:24879156@combodb.uusbhhs.mongodb.net/db
+ENV ALLOWED_IP=172.18.0.1
 ENV IP_TOKEN=a631f41522aa77
 ENV JWT_SECRET=17gisusbgklsdguiwn
 

@@ -12,8 +12,12 @@ services:
       - .:/app # Monta el directorio actual en /app del contenedor
     environment:
       PORT: 4000
-      MONGO_URI: mongodb+srv://testggacc:pKYKvDFywDL2mRlr@cluster.vbqhi.mongodb.net/
-      ALLOWED_IP: 127.0.0.1
+      # Cambia a `mongodb://` en lugar de `mongodb+srv://` y especifica el puerto 27017
+      MONGO_URI: mongodb+srv://AgustinM12:24879156@combodb.uusbhhs.mongodb.net/bd
+      ALLOWED_IP: 172.18.0.1
       IP_TOKEN: a631f41522aa77
       JWT_SECRET: 17gisusbgklsdguiwn
     command: ['npm', 'run', 'start'] # Comando para ejecutar tu aplicación
+    dns:
+      - 8.8.8.8 # Google DNS
+      - 1.1.1.1 # Cloudflare DNS
